@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import urllib
 import requests
+import os
 
 target_url = 'http://www1.mbrace.or.jp/od2/K/'
 
@@ -24,7 +25,11 @@ for year in years:
 
             save_dir = f'r_lzh/{filename}'
 
-            with urllib.request.urlopen(lurl) as res:
-                with open(save_dir, mode='wb') as f:
-                    f.write(res.read())
+            if not os.path.exists(save_dir):
+                try:
+                    with urllib.request.urlopen(lurl) as res:
+                        with open(save_dir, mode='wb') as f:
+                            f.write(res.read())
+                except:
+                    print("skip")
 
