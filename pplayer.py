@@ -35,23 +35,29 @@ def parseLine(line):
     offset += 4
     multirate = newline[offset: offset + 4]
     offset += 4
-    wincount = newline[offset: offset + 3]
+    wincount = int(newline[offset: offset + 3])
     offset += 3
-    secondcount = newline[offset: offset + 3]
+    secondcount = int(newline[offset: offset + 3])
     offset += 3
-    racecount = newline[offset: offset + 3]
+    racecount = int(newline[offset: offset + 3])
     offset += 3
-    champrace = newline[offset: offset + 2]
+    champrace = int(newline[offset: offset + 2])
     offset += 2
-    champcount = newline[offset: offset + 2]
+    champcount = int(newline[offset: offset + 2])
     offset += 2
     avgstart = newline[offset: offset + 3]
     
     offset = 142
-    preiod_from = newline[offset: offset + 8]
+    preiod_from = int(newline[offset: offset + 8])
     offset += 8
-    preiod_to = newline[offset: offset + 8]
-    print(number, name, shibu, rank, blood, winrate, multirate, preiod_from, preiod_to)
+    preiod_to = int(newline[offset: offset + 8])
+
+    # 文字列 → 数値
+    winrate_val = float(f'{winrate[:2]}.{winrate[2:]}')
+    multirate_val = float(f'{multirate[:2]}.{multirate[2:]}')
+    avgstart_val = float(f'{avgstart[:2]}.{avgstart[2:]}')
+
+    print(number, name, shibu, rank, blood, winrate_val, multirate_val, avgstart_val, preiod_from, preiod_to)
 
 
 
@@ -70,6 +76,7 @@ def parseFile():
         with open(fanfile, 'r') as file:
             while True:
                 line = file.readline()
+                line = line.strip()
                 if line:
                     parseLine(line)
                     lines += 1
