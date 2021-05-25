@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import glob
 import re
+import json
 
-players = set()
+players = {}
 
 def parseLine(line):
     number = line[:4]
@@ -57,22 +58,32 @@ def parseLine(line):
     multirate_val = float(f'{multirate[:2]}.{multirate[2:]}')
     avgstart_val = float(f'{avgstart[:2]}.{avgstart[2:]}')
 
-    print(number, name, shibu, rank, blood, winrate_val, multirate_val, avgstart_val, preiod_from, preiod_to)
+    # print(number, name, shibu, rank, blood, winrate_val, multirate_val, avgstart_val, preiod_from, preiod_to)
 
+    obj = {}
+    # obj['shibu'] = shibu
+    obj['rank'] = rank
+    obj['winrate'] = winrate_val
+    obj['multirate'] = multirate_val
+    obj['wincount'] = wincount
+    obj['secondcount'] = secondcount
+    obj['racecount'] = racecount
+    obj['champrace'] = champrace
+    obj['champcount'] = champcount
+    obj['avgstart'] = avgstart_val
+    obj['from'] = preiod_from
+    obj['to'] = preiod_to
 
-
-    # if number in players:
-    #     print(f"{number}: 存在")
-    
-    players.add(number)
+    if not number in players:
+        players[number] = []
+    players[number].append(obj)
 
 def parseFile():
-    # fanfiles = glob.glob('fan/fan*.txt')
-    fanfiles = ['fan/fan2010.txt']
+    fanfiles = glob.glob('fan/fan*.txt')
+    # fanfiles = ['fan/fan2010.txt', 'fan/fan2004.txt']
     lines = 0
 
     for fanfile in fanfiles:
-        print(fanfile)
         with open(fanfile, 'r') as file:
             while True:
                 line = file.readline()
@@ -83,7 +94,8 @@ def parseFile():
                 else:
                     break
 
-    print(lines, len(players))
+    # print(lines, len(players))
+    print(json.dumps(players))
 
 if __name__ == '__main__':
     parseFile()
