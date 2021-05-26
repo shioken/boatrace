@@ -6,20 +6,23 @@ def trimLine(line):
     return re.sub('[ ]+', ' ', re.sub(r"[\u3000]", "", line)).split(' ')
 
 def parsePlayer(line):
-    number = int(line[:1])
-    id = line[2:6]
-    name = line[6:10]
-    age = int(line[10:12])
-    area = line[12:14]
-    weight = int(line[14:16])
-    rank = line[16:18]
+    (number, id, name, age, area, weight, rank) = (
+        int(line[:1]),
+        line[2:6],
+        line[6:10],
+        int(line[10:12]),
+        line[12:14],
+        int(line[14:16]),
+        line[16:18],
+    )
     data = line[19:]
     parts = re.sub('[ ]+', ' ', data).split(' ')
-    print('len', len(parts))
-    win_all = float(parts[0])
-    sec_all = float(parts[1])
-    win_cur = float(parts[2])
-    sec_cur = float(parts[3])
+    (win_all, sec_all, win_cur, sec_cur) = (
+        float(parts[0]),
+        float(parts[1]),
+        float(parts[2]),
+        float(parts[3]),
+    )
 
     obj = {}
     obj["number"] = number
