@@ -37,7 +37,7 @@ def parsePlayer(line):
     return obj
 
 
-def parseFile(filename):
+def parseRacelistFile(filename):
     print(filename)
 
     date = filename[filename.rfind('/') + 1: filename.find('.')]
@@ -74,10 +74,9 @@ def parseFile(filename):
                         pline = False
                 else:
                     if 'BGN' in line:
-                        print("START")
                         nt = True
                     elif 'END' in line:
-                        print("END")
+                        nt = False
                     elif '---' in line:
                         lb += 1
                         if lb == 1:
@@ -97,14 +96,71 @@ def parseFile(filename):
                 break
     print(lines)
 
-def parseFiles(files):
-    for file in files:
-        parseFile(file)
-    
-    print(len(files))
 
+def parseResult(line):
+    racenumber = int(line[:line.find('R')])
+    print('race', racenumber)
+
+    if '中　止' in line:
+        print('中止')
+        return
+
+    first = int(line[15:16])
+    second = int(line[17:18])
+    third = int(line[19:20])
+    print(first, second, third)
+    
+def parseResultFile(filename):
+    print(filename)
+
+    date = filename[filename.rfind('/') + 1: filename.find('.')]
+
+    (year, month, day) = (
+        int(date[1:3]) + 2000,
+        int(date[3:5]),
+        int(date[5:]),
+    )
+    print(year, month, day)
+
+    nt = False
+    rt = False
+    rn = 0
+    with open(filename, 'r') as f:
+        while True:
+            line = f.readline()
+            if nt:
+                place = trimLine(line)[0][:2].rstrip('［')
+                print(place)
+                nt = False
+            elif rt:
+                parseResult(line)
+                rn += 1
+                if rn == 12:
+                    rt = False
+            elif line:
+                if 'BGN' in line:
+                    nt = True
+                elif 'END' in line:
+                    print('END')
+                elif '払戻金' in line:
+                    rt = True
+                    rn = 0
+            else:
+                break
+
+
+def parseRacelistFiles(files):
+    for file in files:
+        parseRacelistFile(file)
+
+
+def parseResultFiles(files):
+    for file in files:
+        parseResultFile(file)
 
 if __name__ == '__main__':
     # files = glob.glob('racelist/b*.txt')
-    files = ['racelist/b210525.txt']
-    parseFiles(files)
+    racelistfiles = ['racelist/b210525.txt']
+    resultfiles = ['result/k210525.txt']
+    parseRacelistFiles(racelistfiles)
+    parseResultFiles(resultfiles)
