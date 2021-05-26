@@ -6,7 +6,7 @@ def trimLine(line):
     return re.sub('[ ]+', ' ', re.sub(r"[\u3000]", "", line)).split(' ')
 
 def parsePlayer(line):
-    (number, id, name, age, area, weight, rank) = (
+    (number, id, name, age, area, weight, rank, win_all, sec_all, win_cur, sec_cur) = (
         int(line[:1]),
         line[2:6],
         line[6:10],
@@ -14,14 +14,10 @@ def parsePlayer(line):
         line[12:14],
         int(line[14:16]),
         line[16:18],
-    )
-    data = line[19:]
-    parts = re.sub('[ ]+', ' ', data).split(' ')
-    (win_all, sec_all, win_cur, sec_cur) = (
-        float(parts[0]),
-        float(parts[1]),
-        float(parts[2]),
-        float(parts[3]),
+        float(line[18:24]),
+        float(line[24:30]),
+        float(line[30:35]),
+        float(line[35:41]),
     )
 
     obj = {}
@@ -46,9 +42,11 @@ def parseFile(filename):
 
     date = filename[filename.rfind('/') + 1: filename.find('.')]
 
-    year = int(date[1:3]) + 2000
-    month = int(date[3:5])
-    day = int(date[5:])
+    (year, month, day) = (
+        int(date[1:3]) + 2000,
+        int(date[3:5]),
+        int(date[5:]),
+    )
     print(year, month, day)
 
     lines = 0
