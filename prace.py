@@ -88,8 +88,8 @@ def parseRacelistFile(filename):
                         lb += 1
                         if lb == 1:
                             raceinfo = trimLine(prevLine)
-                            racenumber = raceinfo[0].translate(raceinfo[0].maketrans(
-                                {chr(0xFF01 + i): chr(0x21 + i) for i in range(94)})).replace('R', '')
+                            racenumber = int(raceinfo[0].translate(raceinfo[0].maketrans(
+                                {chr(0xFF01 + i): chr(0x21 + i) for i in range(94)})).replace('R', ''))
                             # print(racenumber)
 
                             race = {}
@@ -110,11 +110,16 @@ def parseRacelistFile(filename):
     return races
 
 def parseResult(line):
+    if not 'R' in line:
+        return (0, 0, 0)    # 同着の場合。とりあえず無視する
+
     racenumber = int(line[:line.find('R')])
     # print('race', racenumber)
 
     if '中　止' in line:
         # print('中止')
+        return (-1, -1, -1)
+    if '不成立' in line:
         return (-1, -1, -1)
 
     first = int(line[15:16])
@@ -143,20 +148,23 @@ def parseResultFile(filename):
         while True:
             line = f.readline()
             if nt:
-                place = trimLine(line)[0][:2].rstrip('［')
+                place = trimLine(line)[0]
+                place = place[: place.rfind('［')]
                 # print(place)
-                # result["place"] = place
                 nt = False
             elif rt:
                 fst = parseResult(line)
-                rn += 1
-                result = {}
-                result["place"] = place
-                result["racenumber"] = rn
-                result["results"] = list(fst)
-                results.append(result)
-                if rn == 12:
-                    rt = False
+                if not fst == (0, 0, 0):
+                    rn += 1
+                    result = {}
+                    result["place"] = place
+                    result["racenumber"] = rn
+                    result["results"] = list(fst)
+                    results.append(result)
+                    if rn == 12:
+                        rt = False
+                else:
+                    print("同着スキップ")
             elif line:
                 if 'BGN' in line:
                     nt = True
@@ -180,6 +188,27 @@ def parseResultFiles(files):
     for file in files:
         parseResultFile(file)
 
+
+def mergeRaceAndResult(races, results):
+    emptyraces = []
+    for race in races:
+        # find result
+        for result in results:
+            if result["place"] == race["place"] and race["racenumber"] == result["racenumber"]:
+                race["result"] = result
+                break
+        
+        if not "result" in race:
+            print("not result", race["place"], race["racenumber"])
+            emptyraces.append(race)
+            # return False
+    
+    for race in emptyraces:
+        races.remove(race)
+
+    return True
+
+
 def parseFiles(kfiles):
     races = []
     results = []
@@ -187,23 +216,22 @@ def parseFiles(kfiles):
     for kfile in kfiles:
         bfile = f"racelist/b{kfile[kfile.rfind('k') + 1:]}"
         if os.path.exists(bfile):
+            print(kfile)
             la = True
             races = parseRacelistFile(bfile)
             results = parseResultFile(kfile)
 
-            print(json.dumps(results))
+            if mergeRaceAndResult(races, results):
+                jsonfile = f"model/m{kfile[kfile.rfind('k') + 1: kfile.rfind('.txt')]}.json"
+                # print(jsonfile)
+                with open(jsonfile, 'wt', encoding='utf-8') as jf:
+                    json.dump(races, jf, ensure_ascii = False, indent = 4)
         else:
             print(f"result file {bfile} is not exists")
 
 
 if __name__ == '__main__':
-    # files = glob.glob('racelist/b*.txt')
-    # racelistfiles = ['racelist/b210525.txt']
-    # resultfiles = ['result/k210525.txt']
-    # parseRacelistFiles(racelistfiles)
-    # parseResultFiles(resultfiles)
-
-    # resultfiles = glob.glob('result/k*.txt')
-    resultfiles = ['result/k210525.txt']
+    resultfiles = glob.glob('result/k*.txt')
+    # resultfiles = ['result/k210524.txt']
     parseFiles(resultfiles)
 
