@@ -235,7 +235,7 @@ def parseFiles(kfiles):
 
 
 if __name__ == '__main__':
-    resultfiles = glob.glob('result/k*.txt')
-    # resultfiles = ['result/k210524.txt']
+    # resultfiles = glob.glob('result/k*.txt')
+    resultfiles = ['result/k210525.txt']
     parseFiles(resultfiles)
 
