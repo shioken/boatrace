@@ -8,7 +8,7 @@ def trimLine(line):
     return re.sub('[ ]+', ' ', re.sub(r"[\u3000]", "", line)).split(' ')
 
 def parsePlayer(line):
-    (number, id, name, age, area, weight, rank, win_all, sec_all, win_cur, sec_cur) = (
+    (number, id, name, age, area, weight, rank, win_all, sec_all, win_cur, sec_cur, motor_no, motor_ratio, boat_no, boat_ratio) = (
         int(line[:1]),
         line[2:6],
         line[6:10],
@@ -20,6 +20,10 @@ def parsePlayer(line):
         float(line[24:30]),
         float(line[30:35]),
         float(line[35:41]),
+        int(line[41:44]),
+        float(line[44:50]),
+        int(line[50:53]),
+        float(line[53:59])
     )
 
     obj = {}
@@ -33,6 +37,10 @@ def parsePlayer(line):
     obj["sec_all"] = sec_all
     obj["win_cur"] = win_cur
     obj["sec_cur"] = sec_cur
+    obj["motor_no"] = motor_no
+    obj["motor_ratio"] = motor_ratio
+    obj["boat_no"] = boat_no
+    obj["boat_ratio"] = boat_ratio
 
     # print(obj)
 
@@ -235,7 +243,7 @@ def parseFiles(kfiles):
 
 
 if __name__ == '__main__':
-    # resultfiles = glob.glob('result/k*.txt')
-    resultfiles = ['result/k210525.txt']
+    resultfiles = glob.glob('result/k*.txt')
+    # resultfiles = ['result/k210525.txt']
     parseFiles(resultfiles)
 

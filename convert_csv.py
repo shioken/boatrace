@@ -11,7 +11,7 @@ def convertFile(file):
     with open(file, 'rt', encoding='utf-8') as f:
         data = json.load(f)
 
-        scores = (8, 3, 1)
+        scores = (1, 0, 0)
 
         rows = []
         for race in data:
@@ -41,6 +41,10 @@ def convertFile(file):
                     racer["sec_all"],
                     racer["win_cur"],
                     racer["sec_cur"],
+                    racer["motor_no"],
+                    racer["motor_ratio"],
+                    racer["boat_no"],
+                    racer["boat_ratio"],
                 ]
 
                 if results[0] > -1:
@@ -55,7 +59,7 @@ def convertFile(file):
             # header += ["1st", "2nd", "3rd"]
             header += ["winscore"]
             header += ["place", "placeid", "racenumber", ]
-            header += ["number", "name", "age", "area", "weight", "rank", "win_all", "sec_all", "win_cur", "sec_cur"]
+            header += ["number", "name", "age", "area", "weight", "rank", "win_all", "sec_all", "win_cur", "sec_cur", "motor_no", "motor_ratio", "boat_no", "boat_ratio"]
             # for i in range(1, 7):
             #     header += [f"number{i}", f"name{i}", f"age{i}", f"area{i}", f"weight{i}", f"rank{i}", f"win_all{i}", f"sec_all{i}", f"win_cur{i}", f"sec_cur{i}"]
 
