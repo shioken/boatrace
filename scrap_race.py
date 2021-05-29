@@ -30,6 +30,19 @@ def scrap_today():
     save_dir = f'b_lzh/{filename}'
     getFile(lurl, save_dir)
 
+def scrap(date):
+    year = date[:4]
+    month = date[4:6]
+    day = date[6:8]
+    yy = year[2:]
+    stoday = f"{yy}{month}{day}"
+    stmonth = f"{year}{month}"
+    dir = f'{target_url}B/{stmonth}/'
+    filename = f'b{stoday}.lzh'
+    lurl = f'{dir}{filename}'
+    save_dir = f'b_lzh/{filename}'
+    getFile(lurl, save_dir)
+
 def scrap_all():
     years = [2016, 2017, 2018, 2019, 2020, 2021]
     days = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -74,6 +87,8 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         if sys.argv[1] == 'today':
             scrap_today()
+        else:
+            scrap(sys.argv[1])
 
     else:
         scrap_all()
