@@ -17,8 +17,6 @@ def convertFile(file):
         for race in data:
             result = race["result"]
             results = result["results"]
-            print(results)
-            # row.extend(results)
 
             racers = race["racers"]
             for i, racer in enumerate(racers):
@@ -71,6 +69,6 @@ def convertFiles(files):
         convertFile(file)
 
 if __name__ == '__main__':
-    # files = glob.glob('model/*.json')
-    files = ['model/m210525.json']
+    files = glob.glob('model/*.json')
+    # files = ['model/m210525.json']
     convertFiles(files)
