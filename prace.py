@@ -3,6 +3,7 @@ import glob
 import re
 import os
 import json
+import sys
 
 def trimLine(line):
     return re.sub('[ ]+', ' ', re.sub(r"[\u3000]", "", line)).split(' ')
@@ -234,7 +235,7 @@ def parseFiles(kfiles):
             results = parseResultFile(kfile)
 
             if mergeRaceAndResult(races, results):
-                jsonfile = f"model/m{kfile[kfile.rfind('k') + 1: kfile.rfind('.txt')]}.json"
+                jsonfile = f"json/m{kfile[kfile.rfind('k') + 1: kfile.rfind('.txt')]}.json"
                 # print(jsonfile)
                 with open(jsonfile, 'wt', encoding='utf-8') as jf:
                     json.dump(races, jf, ensure_ascii = False, indent = 4)
