@@ -27,11 +27,13 @@ def prediction(racers):
     predictions = model.predict(X)
     mean = predictions.mean()
     std = predictions.std()
-    print(mean, std)
+    print("")
+    print("{0:>0.5f}, {1:>0.5f}".format(mean, std))
+    print("")
     for i, pr in enumerate(predictions):
         deviation = (pr[0] - mean) / std
         deviation_value = deviation * 10 + 50
-        print((i + 1), "{0:>6.3f}% {1}".format(pr[0] * 100, deviation_value))
+        print((i + 1), "{0:>3.3f}% {1:>3.3f}".format(pr[0] * 100, deviation_value))
         
 
 def parsePlayer(line):
@@ -79,11 +81,6 @@ def parseRacelistFile(filename):
             line = f.readline()
             if line:
                 if nt:
-                    # タイトル取得(全角スペースを除去した後に連続する空白をまとめてから分割する)
-                    # titleline = trimLine(line)
-                    # place = titleline[0].replace('ボートレース', '')
-                    # print(place)
-                    print(line)
                     nt = False
                 elif pline:
                     print(line.strip())
@@ -102,16 +99,9 @@ def parseRacelistFile(filename):
                     elif '---' in line:
                         lb += 1
                         if lb == 1:
-                            # raceinfo = trimLine(prevLine)
-                            # racenumber = int(raceinfo[0].translate(raceinfo[0].maketrans(
-                            #     {chr(0xFF01 + i): chr(0x21 + i) for i in range(94)})).replace('R', ''))
-                            # # print(racenumber)
-
-                            # race = {}
-                            # race["place"] = place
-                            # race["placeid"] = places.index(place)
-                            # race["racenumber"] = racenumber
+                            print("-------------------------------------------------------------------------------")
                             print(prevLine.strip())
+                            print("-------------------------------------------------------------------------------")
                             racers = []
                         else:
                             # 次の行から選手が出てくる
@@ -134,6 +124,6 @@ def openfile(date):
 
 if __name__ == '__main__':
     model = models.load_model('model/br_model.h5')
-    print(model.summary())
+    # print(model.summary())
     if len(sys.argv) > 1:
         openfile(sys.argv[1])
