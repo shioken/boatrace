@@ -25,7 +25,14 @@ def prediction(racers):
     X /= std
     X = np.nan_to_num(X)
     predictions = model.predict(X)
-    print(predictions)
+    mean = predictions.mean()
+    std = predictions.std()
+    print(mean, std)
+    for i, pr in enumerate(predictions):
+        deviation = (pr[0] - mean) / std
+        deviation_value = deviation * 10 + 50
+        print((i + 1), "{0:>6.3f}% {1}".format(pr[0] * 100, deviation_value))
+        
 
 def parsePlayer(line):
     (number, id, name, age, area, weight, rank, win_all, sec_all, win_cur, sec_cur, motor_no, motor_ratio, boat_no, boat_ratio) = (
@@ -86,6 +93,7 @@ def parseRacelistFile(filename):
                     if pcount == 6:
                         prediction(racers)
                         pline = False
+                        print("")
                 else:
                     if 'BGN' in line:
                         nt = True
