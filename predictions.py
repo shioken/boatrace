@@ -70,7 +70,8 @@ def parsePlayer(line):
 
 def parseRacelistFile(filename):
     prevLine = ''
-    nt = True
+    nt = False
+    place = ""
     lb = 0  # Line Break Flag '---'
     place = ''
     pline = False
@@ -81,6 +82,8 @@ def parseRacelistFile(filename):
             line = f.readline()
             if line:
                 if nt:
+                    print(line)
+                    place = trimLine(line)[0].replace('ボートレース', '')
                     nt = False
                 elif pline:
                     print(line.strip())
@@ -100,7 +103,7 @@ def parseRacelistFile(filename):
                         lb += 1
                         if lb == 1:
                             print("-------------------------------------------------------------------------------")
-                            print(prevLine.strip())
+                            print(place, prevLine.strip())
                             print("-------------------------------------------------------------------------------")
                             racers = []
                         else:
