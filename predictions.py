@@ -28,12 +28,12 @@ def prediction(racers):
     mean = predictions.mean()
     std = predictions.std()
     print("")
-    print("mean:{0:>0.5f} std:{1:>0.5f}".format(mean, std))
+    print("mean:{0:>.5f} std:{1:>.5f}".format(mean, std))
     print("")
     for i, pr in enumerate(predictions):
         deviation = (pr[0] - mean) / std
         deviation_value = deviation * 10 + 50
-        print((i + 1), "{0:>3.3f}% {1:>3.3f}".format(pr[0] * 100, deviation_value))
+        print((i + 1), "{0:>8.3f}% {1:>8.3f}".format(pr[0] * 100, deviation_value))
         
 
 def parsePlayer(line):
