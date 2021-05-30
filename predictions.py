@@ -17,8 +17,6 @@ def trimLine(line):
 
 def prediction(racers):
     X = np.array(racers)
-
-
     mean = X.mean(axis=0)
     std = X.std(axis=0)
     X -= mean
@@ -35,6 +33,13 @@ def prediction(racers):
         deviation_value = deviation * 10 + 50
         print((i + 1), "{0:>8.3f}% {1:>8.3f}".format(pr[0] * 100, deviation_value))
         
+
+RANKMAP = {
+    'A1': [1.0, 0.0, 0.0, 0.0],
+    'A2': [0.0, 1.0, 0.0, 0.0],
+    'B1': [0.0, 0.0, 1.0, 0.0],
+    'B2': [0.0, 0.0, 0.0, 1.0],
+}
 
 def parsePlayer(line):
     (number, id, name, age, area, weight, rank, win_all, sec_all, win_cur, sec_cur, motor_no, motor_ratio, boat_no, boat_ratio) = (
@@ -55,13 +60,7 @@ def parsePlayer(line):
         float(line[53:59])
     )
 
-    rankmap = {
-        'A1': [1.0, 0.0, 0.0, 0.0],
-        'A2': [0.0, 1.0, 0.0, 0.0],
-        'B1': [0.0, 0.0, 1.0, 0.0],
-        'B2': [0.0, 0.0, 0.0, 1.0],
-    }
-    rank_val = rankmap[rank]
+    rank_val = RANKMAP[rank]
 
     X = [float(number), float(weight), win_all, sec_all, win_cur, sec_cur, motor_ratio, boat_ratio]
     X += rank_val
