@@ -28,7 +28,7 @@ def prediction(racers):
     mean = predictions.mean()
     std = predictions.std()
     print("")
-    print("{0:>0.5f}, {1:>0.5f}".format(mean, std))
+    print("mean:{0:>0.5f} std:{1:>0.5f}".format(mean, std))
     print("")
     for i, pr in enumerate(predictions):
         deviation = (pr[0] - mean) / std
