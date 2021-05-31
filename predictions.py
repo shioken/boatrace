@@ -92,7 +92,8 @@ def parseRacelistFile(filename, pfilename, jsonfile):
     races = []
     currace = {}
     curplace = {}
-    jroot["place"] = places
+    jroot["places"] = places
+    racecount = 0
 
     with open(filename, 'r', encoding='utf-8') as f:
         while True:
@@ -105,6 +106,7 @@ def parseRacelistFile(filename, pfilename, jsonfile):
                     curplace = {}
                     curplace["name"] = place
                     races = []
+                    racecount = 0
                     curplace["races"] = races
                     places.append(curplace)
                     nt = False
@@ -140,6 +142,8 @@ def parseRacelistFile(filename, pfilename, jsonfile):
 
                             currace = {}
                             currace["name"] = prevLine.strip()
+                            racecount += 1
+                            currace["number"] = racecount
                             races.append(currace)
                             currace["racers"] = []
 
