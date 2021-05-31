@@ -117,6 +117,7 @@ def parseRacelistFile(filename, pfilename, jsonfile):
                     racers.append(racer)
                     jracer = {}
                     jracer["name"] = line[6:10]
+                    jracer["course"] = pcount
                     currace["racers"].append(jracer)
                     if pcount == 6:
                         prediction(racers, olines, currace)
