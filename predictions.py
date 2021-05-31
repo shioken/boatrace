@@ -15,7 +15,7 @@ model = None
 def trimLine(line):
     return re.sub('[ ]+', ' ', re.sub(r"[\u3000]", "", line)).split(' ')
 
-def prediction(racers):
+def prediction(racers, lines):
     X = np.array(racers)
     mean = X.mean(axis=0)
     std = X.std(axis=0)
@@ -25,14 +25,16 @@ def prediction(racers):
     predictions = model.predict(X)
     mean = predictions.mean()
     std = predictions.std()
-    print("")
-    print("mean:{0:>.5f} std:{1:>.5f}".format(mean, std))
-    print("")
+    # print("")
+    lines.append('\n')
+    # print("mean:{0:>.5f} std:{1:>.5f}".format(mean, std))
+    lines.append("mean:{0:>.5f} std:{1:>.5f}\n".format(mean, std))
+    # print("")
     for i, pr in enumerate(predictions):
         deviation = (pr[0] - mean) / std
         deviation_value = deviation * 10 + 50
-        print((i + 1), "{0:>8.3f}% {1:>8.3f}".format(pr[0] * 100, deviation_value))
-        
+        # print((i + 1), "{0:>8.3f}% {1:>8.3f}".format(pr[0] * 100, deviation_value))
+        lines.append("{2} {0:>8.3f}% {1:>8.3f}\n".format(pr[0] * 100, deviation_value, i + 1))
 
 RANKMAP = {
     'A1': [1.0, 0.0, 0.0, 0.0],
@@ -67,7 +69,7 @@ def parsePlayer(line):
 
     return X
 
-def parseRacelistFile(filename):
+def parseRacelistFile(filename, pfilename):
     prevLine = ''
     nt = False
     place = ""
@@ -76,23 +78,30 @@ def parseRacelistFile(filename):
     pline = False
     pcount = 0
     racers = []
-    with open(filename, 'r') as f:
+    olines = []
+    with open(filename, 'r', encoding='utf-8') as f:
         while True:
             line = f.readline()
             if line:
                 if nt:
-                    print(line)
+                    # print(line)
+                    olines.append(line)
+                    olines.append('\n')
                     place = trimLine(line)[0].replace('ボートレース', '')
                     nt = False
                 elif pline:
-                    print(line.strip())
+                    sl = line.strip()
+                    # print(sl)
+                    olines.append(sl)
+                    olines.append('\n')
                     racer = parsePlayer(line)
                     pcount += 1
                     racers.append(racer)
                     if pcount == 6:
-                        prediction(racers)
+                        prediction(racers, olines)
                         pline = False
-                        print("")
+                        # print("")
+                        olines.append('\n')
                 else:
                     if 'BGN' in line:
                         nt = True
@@ -101,9 +110,14 @@ def parseRacelistFile(filename):
                     elif '---' in line:
                         lb += 1
                         if lb == 1:
-                            print("-------------------------------------------------------------------------------")
-                            print(place, prevLine.strip())
-                            print("-------------------------------------------------------------------------------")
+                            # print("-------------------------------------------------------------------------------")
+                            # print(place, prevLine.strip())
+                            # print("-------------------------------------------------------------------------------")
+                            olines.append(
+                                "-------------------------------------------------------------------------------\n")
+                            olines.append(f'{place} {prevLine.strip()}\n')
+                            olines.append(
+                                "-------------------------------------------------------------------------------\n")
                             racers = []
                         else:
                             # 次の行から選手が出てくる
@@ -114,15 +128,21 @@ def parseRacelistFile(filename):
                 prevLine = line
             else:
                 break
+        
+        with open(pfilename, 'w', encoding='utf-8') as pf:
+            pf.writelines(olines)
+        
+
 
 
 def openfile(date):
     filename = f'racelist/b{date}.txt'
+    predictfile = f'predicted/p{date}.txt'
     if not os.path.exists(filename):
         print(f"file '{filename} is not found")
         return
 
-    parseRacelistFile(filename)
+    parseRacelistFile(filename, predictfile)
 
 if __name__ == '__main__':
     model = models.load_model('model/br_model.h5')
