@@ -74,7 +74,7 @@ def scrap(date):
 def scrap_all():
     years = [2016, 2017, 2018, 2019, 2020, 2021]
     days = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-    today = datetime.datetime.now()
+    today = datetime.today()
     stoday = today.strftime("%y%m%d")
 
     for year in years:

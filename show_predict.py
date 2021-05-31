@@ -5,12 +5,18 @@ import os
 import json
 import sys
 
+def output_json(json):
+    for place in json:
+        print(place["name"])
+        for race in place["races"]:
+            print(f"{race['number']:2}R {race['vote']}")
 def predictit(pname, area=""):
     filepath = f'predicted/p{pname}.json'
     if os.path.exists(filepath):
         with open(filepath, 'r', encoding='utf-8') as f:
             data = json.load(f)
             places = data["places"]
+            all_votes = []
             for place in places:
                 if len(area) == 0 or area == place["name"]:
                     print("------------------------------")
@@ -31,9 +37,22 @@ def predictit(pname, area=""):
                         votes.append(vote)
                     
                     print(place["name"])
+                    jp = {}
+                    jp["name"] = place["name"]
+                    all_votes.append(jp)
+                    jrs = []
+                    jp["races"] = jrs
                     for i in range(12):
+                        jr = {}
+                        jr["number"] = i + 1
+                        jr["vote"] = f"{votes[i][0]}-{votes[i][1]}-{votes[i][2]}"
+                        jrs.append(jr)
                         print(
                             f"{i + 1:>2}R {votes[i][0]}-{votes[i][1]}-{votes[i][2]}")
+                    
+                # print(json.dumps(all_votes, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': ')))
+                output_json(all_votes)
+
     else:
         print(f'{filepath} dose not exists.')
 

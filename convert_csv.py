@@ -8,6 +8,10 @@ def convertFile(file):
     csvfilename = f'csv/{os.path.splitext(os.path.basename(file))[0]}.csv'
     print(file, csvfilename)
 
+    if os.path.exists(csvfilename):
+        print(f"file {csvfilename} is exists")
+        return
+
     with open(file, 'rt', encoding='utf-8') as f:
         data = json.load(f)
 
@@ -73,6 +77,6 @@ def convertFiles(files):
         convertFile(file)
 
 if __name__ == '__main__':
-    files = glob.glob('json/*.json')
+    files = sorted(glob.glob('json/*.json'))
     # files = ['json/m210525.json']
     convertFiles(files)
