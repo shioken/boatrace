@@ -15,7 +15,7 @@ model = None
 def trimLine(line):
     return re.sub('[ ]+', ' ', re.sub(r"[\u3000]", "", line)).split(' ')
 
-def prediction(racers, lines):
+def prediction(racers, lines, race):
     X = np.array(racers)
     mean = X.mean(axis=0)
     std = X.std(axis=0)
@@ -26,16 +26,22 @@ def prediction(racers, lines):
     sum = predictions.sum()
     mean = predictions.mean()
     std = predictions.std()
-    # print("")
+
+    race["sum"] = float(sum)
+    race["mean"] = float(mean)
+    race["std"] = float(std)
+
     lines.append('\n')
-    # print("mean:{0:>.5f} std:{1:>.5f}".format(mean, std))
     lines.append("sum:{2:>.5f} mean:{0:>.5f} std:{1:>.5f}\n".format(mean, std, sum))
-    # print("")
     for i, pr in enumerate(predictions):
         deviation = (pr[0] - mean) / std
         deviation_value = deviation * 10 + 50
         # print((i + 1), "{0:>8.3f}% {1:>8.3f}".format(pr[0] * 100, deviation_value))
         lines.append("{2} {0:>8.3f}% {1:>8.3f}\n".format(pr[0] * 100, deviation_value, i + 1))
+
+        racer = race["racers"][i]
+        racer["score"] = float(pr[0])
+        racer["deviation"] = float(deviation)
 
 RANKMAP = {
     'A1': [1.0, 0.0, 0.0, 0.0],
@@ -70,7 +76,7 @@ def parsePlayer(line):
 
     return X
 
-def parseRacelistFile(filename, pfilename):
+def parseRacelistFile(filename, pfilename, jsonfile):
     prevLine = ''
     nt = False
     place = ""
@@ -80,28 +86,41 @@ def parseRacelistFile(filename, pfilename):
     pcount = 0
     racers = []
     olines = []
+
+    jroot = {}
+    places = []
+    races = []
+    currace = {}
+    curplace = {}
+    jroot["place"] = places
+
     with open(filename, 'r', encoding='utf-8') as f:
         while True:
             line = f.readline()
             if line:
                 if nt:
-                    # print(line)
                     olines.append(line)
                     olines.append('\n')
                     place = trimLine(line)[0].replace('ボートレース', '')
+                    curplace = {}
+                    curplace["name"] = place
+                    races = []
+                    curplace["races"] = races
+                    places.append(curplace)
                     nt = False
                 elif pline:
                     sl = line.strip()
-                    # print(sl)
                     olines.append(sl)
                     olines.append('\n')
                     racer = parsePlayer(line)
                     pcount += 1
                     racers.append(racer)
+                    jracer = {}
+                    jracer["name"] = line[6:10]
+                    currace["racers"].append(jracer)
                     if pcount == 6:
-                        prediction(racers, olines)
+                        prediction(racers, olines, currace)
                         pline = False
-                        # print("")
                         olines.append('\n')
                 else:
                     if 'BGN' in line:
@@ -111,15 +130,19 @@ def parseRacelistFile(filename, pfilename):
                     elif '---' in line:
                         lb += 1
                         if lb == 1:
-                            # print("-------------------------------------------------------------------------------")
-                            # print(place, prevLine.strip())
-                            # print("-------------------------------------------------------------------------------")
                             olines.append(
                                 "-------------------------------------------------------------------------------\n")
                             olines.append(f'{place} {prevLine.strip()}\n')
                             olines.append(
                                 "-------------------------------------------------------------------------------\n")
                             racers = []
+
+                            currace = {}
+                            currace["name"] = prevLine.strip()
+                            races.append(currace)
+                            currace["racers"] = []
+
+                            
                         else:
                             # 次の行から選手が出てくる
                             lb = 0
@@ -132,6 +155,9 @@ def parseRacelistFile(filename, pfilename):
         
         with open(pfilename, 'w', encoding='utf-8') as pf:
             pf.writelines(olines)
+
+        with open(jsonfile, 'w', encoding='utf-8') as jf:
+            json.dump(jroot, jf, ensure_ascii = False, indent = 4)
         
 
 
@@ -139,11 +165,12 @@ def parseRacelistFile(filename, pfilename):
 def openfile(date):
     filename = f'racelist/b{date}.txt'
     predictfile = f'predicted/p{date}.txt'
+    pjsonfile = f'predicted/p{date}.json'
     if not os.path.exists(filename):
         print(f"file '{filename} is not found")
         return
 
-    parseRacelistFile(filename, predictfile)
+    parseRacelistFile(filename, predictfile, pjsonfile)
 
 if __name__ == '__main__':
     model = models.load_model('model/br_model.h5')
