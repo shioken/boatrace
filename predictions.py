@@ -23,12 +23,13 @@ def prediction(racers, lines):
     X /= std
     X = np.nan_to_num(X)
     predictions = model.predict(X)
+    sum = predictions.sum()
     mean = predictions.mean()
     std = predictions.std()
     # print("")
     lines.append('\n')
     # print("mean:{0:>.5f} std:{1:>.5f}".format(mean, std))
-    lines.append("mean:{0:>.5f} std:{1:>.5f}\n".format(mean, std))
+    lines.append("sum:{2:>.5f} mean:{0:>.5f} std:{1:>.5f}\n".format(mean, std, sum))
     # print("")
     for i, pr in enumerate(predictions):
         deviation = (pr[0] - mean) / std
