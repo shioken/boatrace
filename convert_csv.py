@@ -15,7 +15,12 @@ def convertFile(file):
     with open(file, 'rt', encoding='utf-8') as f:
         data = json.load(f)
 
-        scores = (1, 0, 0)
+        # scores = (3, 2, 1)  # 3着以内に点を与える
+        scores = [
+            (1, 0, 0),
+            (0, 1, 0),
+            (0, 0, 1),
+        ]
 
         rows = []
         for race in data:
@@ -26,12 +31,12 @@ def convertFile(file):
             for i, racer in enumerate(racers):
                 row = []
 
-                score = 0
+                score = (0, 0, 0)
                 if (i + 1) in results:
                     r = results.index(i + 1)
                     score = scores[r]
 
-                row += [score]
+                row += score
 
                 row += [race["place"], race["placeid"], race["racenumber"]]
                 row += [
@@ -66,8 +71,7 @@ def convertFile(file):
             writer = csv.writer(w)
 
             header = []
-            # header += ["1st", "2nd", "3rd"]
-            header += ["winscore"]
+            header += ["1st", "2nd", "3rd"]
             header += ["place", "placeid", "racenumber", ]
             header += ["number", "name", "age", "area", "weight", "rank", "win_all", "sec_all", "win_cur", "sec_cur", "motor_no", "motor_ratio", "boat_no", "boat_ratio"]
             header += ["r1", "r2", "r3", "r4", "r5", "r6"]
