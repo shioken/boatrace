@@ -45,6 +45,7 @@ def parsePlayer(line):
     obj["boat_ratio"] = boat_ratio
 
     season_result = season_result.replace(' ', '0')
+    season_result = season_result.replace('F', '0')
     for i in range(6):
         obj[f"r{i + 1}"] = season_result[i:i + 1]
 
