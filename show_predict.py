@@ -9,7 +9,8 @@ def output_json(json):
     for place in json:
         print(place["name"])
         for race in place["races"]:
-            print(f"{race['number']:2}R ({race['std']:>5.3f}) {race['vote']}")
+            print(
+                f"{race['number']:2}R ({race['std']:>5.3f}) {race['votes'][0]} {race['votes'][1]} {race['votes'][2]} {race['votes'][3]}")
 
 def show_predictit(pname, area=""):
     filepath = f'predicted/p{pname}.json'
@@ -34,8 +35,7 @@ def show_predictit(pname, area=""):
                         vote = []
                         for i, racer in enumerate(sorted_racers):
                             score = racer["score"]
-                            if i < 3:
-                                vote.append(racer["course"])
+                            vote.append(racer["course"])
                             print(racer["course"], racer["name"], f"{score * 100:>8.3f}%", f"{1 / score:>8.3f}")
                         print("")
                         votes.append(vote)
@@ -50,12 +50,18 @@ def show_predictit(pname, area=""):
                         jr = {}
                         jr["number"] = i + 1
                         jr["std"] = stds[i]
-                        jr["vote"] = f"{votes[i][0]}-{votes[i][1]}-{votes[i][2]}"
+                        jr["votes"] = []
+                        jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][2]}")
+                        jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][3]}")
+                        jr["votes"].append(f"{votes[i][0]}-{votes[i][2]}-{votes[i][3]}")
+                        jr["votes"].append(f"{votes[i][1]}-{votes[i][2]}-{votes[i][3]}")
                         jrs.append(jr)
                         print(
                             f"{i + 1:>2}R {votes[i][0]}-{votes[i][1]}-{votes[i][2]}")
                     
             # print(json.dumps(all_votes, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': ')))
+            print("")
+            print("------------------------------")
             print(pname)
             output_json(all_votes)
 

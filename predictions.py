@@ -51,7 +51,7 @@ RANKMAP = {
 }
 
 def parsePlayer(line):
-    (number, id, name, age, area, weight, rank, win_all, sec_all, win_cur, sec_cur, motor_no, motor_ratio, boat_no, boat_ratio) = (
+    (number, id, name, age, area, weight, rank, win_all, sec_all, win_cur, sec_cur, motor_no, motor_ratio, boat_no, boat_ratio, season_result) = (
         float(line[:1]),
         line[2:6],
         line[6:10],
@@ -66,12 +66,18 @@ def parsePlayer(line):
         int(line[41:44]),
         float(line[44:50]),
         int(line[50:53]),
-        float(line[53:59])
+        float(line[53:59]),
+        line[60:66],
     )
 
     rank_val = RANKMAP[rank]
 
     X = [float(number), float(weight), win_all, sec_all, win_cur, sec_cur, motor_ratio, boat_ratio]
+
+    # season_result = re.sub(r"[ FLSK]", "0", season_result)
+    # for i in range(6):
+    #     X += [float(season_result[i: i + 1])]
+        
     X += rank_val
 
     return X
