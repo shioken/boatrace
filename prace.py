@@ -222,7 +222,7 @@ def mergeRaceAndResult(races, results):
     return True
 
 
-def parseFiles(kfiles):
+def parseFiles(kfiles, force=False):
     races = []
     results = []
 
@@ -235,12 +235,12 @@ def parseFiles(kfiles):
             results = parseResultFile(kfile)
 
             jsonfile = f"json/m{kfile[kfile.rfind('k') + 1: kfile.rfind('.txt')]}.json"
-            if os.path.exists(jsonfile):
+            if not force and os.path.exists(jsonfile):
                 print(f"{jsonfile} is exists")
                 continue
 
             if mergeRaceAndResult(races, results):
-                # print(jsonfile)
+                print("output", jsonfile)
                 with open(jsonfile, 'wt', encoding='utf-8') as jf:
                     json.dump(races, jf, ensure_ascii = False, indent = 4)
         else:
@@ -248,7 +248,9 @@ def parseFiles(kfiles):
 
 
 if __name__ == '__main__':
-    resultfiles = sorted(glob.glob('result/k*.txt'))
-    # resultfiles = ['result/k210525.txt']
-    parseFiles(resultfiles)
-
+    if len(sys.argv) == 2:
+        parseFiles([f"result/k{sys.argv[1]}.txt"], True)
+    else:
+        resultfiles = sorted(glob.glob('result/k*.txt'))
+        # resultfiles = ['result/k210525.txt']
+        parseFiles(resultfiles)

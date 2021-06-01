@@ -9,8 +9,8 @@ import subprocess
 
 target_url = 'http://www1.mbrace.or.jp/od2/'
 
-def getFile(url, filename):
-    if not os.path.exists(filename):
+def getFile(url, filename, force=False):
+    if force or not os.path.exists(filename):
         print("get:", url, "->", filename)
         try:
             with urllib.request.urlopen(url) as res:
@@ -20,7 +20,7 @@ def getFile(url, filename):
                 lf = lhafile.Lhafile(filename)
                 info = lf.infolist()
                 name = info[0].filename
-                print(name)
+                print(filename, name)
 
                 output_dir = "result" if name[0].upper() == "K" else "racelist"
                 txtfilepath = f"{output_dir}/{name.lower()}"
@@ -38,6 +38,23 @@ def getFile(url, filename):
             print("except")
 
 
+def scrap_yesterday():
+    tomorrow = datetime.today() + timedelta(days=-1)
+    stoday = tomorrow.strftime("%y%m%d")
+    stmonth = tomorrow.strftime("%Y%m")
+
+    dir = f'{target_url}B/{stmonth}/'
+    filename = f'b{stoday}.lzh'
+    lurl = f'{dir}{filename}'
+    save_dir = f'b_lzh/{filename}'
+    getFile(lurl, save_dir, True)
+
+    dir = f'{target_url}K/{stmonth}/'
+    filename = f'k{stoday}.lzh'
+    kurl = f'{dir}{filename}'
+    save_dir = f'k_lzh/{filename}'
+    getFile(kurl, save_dir, True)
+
 def scrap_today():
     today = datetime.today()
     stoday = today.strftime("%y%m%d")
@@ -46,7 +63,7 @@ def scrap_today():
     filename = f'b{stoday}.lzh'
     lurl = f'{dir}{filename}'
     save_dir = f'b_lzh/{filename}'
-    getFile(lurl, save_dir)
+    getFile(lurl, save_dir, True)
 
 def scrap_tommorow():
     tomorrow = datetime.today() + timedelta(days=1)
@@ -56,7 +73,7 @@ def scrap_tommorow():
     filename = f'b{stoday}.lzh'
     lurl = f'{dir}{filename}'
     save_dir = f'b_lzh/{filename}'
-    getFile(lurl, save_dir)
+    getFile(lurl, save_dir, True)
 
 def scrap(date):
     year = date[:4]
@@ -121,6 +138,8 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         if sys.argv[1] == 'today':
             scrap_today()
+        elif sys.argv[1] == 'yesterday':
+            scrap_yesterday()
         elif sys.argv[1] == 'tommorow':
             scrap_tommorow()
         else:

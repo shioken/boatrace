@@ -9,9 +9,11 @@ def output_json(json):
     for place in json:
         print(place["name"])
         for race in place["races"]:
-            print(f"{race['number']:2}R {race['vote']}")
-def predictit(pname, area=""):
+            print(f"{race['number']:2}R ({race['std']:>5.3f}) {race['vote']}")
+
+def show_predictit(pname, area=""):
     filepath = f'predicted/p{pname}.json'
+    votepath = f'votes/v{pname}.json'
     if os.path.exists(filepath):
         with open(filepath, 'r', encoding='utf-8') as f:
             data = json.load(f)
@@ -23,8 +25,10 @@ def predictit(pname, area=""):
                     print(place["name"])
                     print("------------------------------")
                     votes = []
+                    stds = []
                     for race in place["races"]:
                         print(race["number"], race["name"])
+                        stds.append(race["std"])
                         racers = race["racers"]
                         sorted_racers = sorted(racers, key=lambda x: x["score"], reverse=True)
                         vote = []
@@ -45,21 +49,26 @@ def predictit(pname, area=""):
                     for i in range(12):
                         jr = {}
                         jr["number"] = i + 1
+                        jr["std"] = stds[i]
                         jr["vote"] = f"{votes[i][0]}-{votes[i][1]}-{votes[i][2]}"
                         jrs.append(jr)
                         print(
                             f"{i + 1:>2}R {votes[i][0]}-{votes[i][1]}-{votes[i][2]}")
                     
-                # print(json.dumps(all_votes, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': ')))
-                output_json(all_votes)
+            # print(json.dumps(all_votes, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': ')))
+            print(pname)
+            output_json(all_votes)
+
+            with open(votepath, 'w', encoding='utf-8') as vf:
+                json.dump(all_votes, vf, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
 
     else:
         print(f'{filepath} dose not exists.')
 
 if __name__ == '__main__':
     if len(sys.argv) == 3:
-        predictit(sys.argv[1], sys.argv[2])
+        show_predictit(sys.argv[1], sys.argv[2])
     elif len(sys.argv) == 2:
-        predictit(sys.argv[1])
+        show_predictit(sys.argv[1])
     else:
         print("ファイルを指定してください")
