@@ -49,6 +49,12 @@ def convertFile(file):
                     racer["motor_ratio"],
                     racer["boat_no"],
                     racer["boat_ratio"],
+                    racer["r1"],
+                    racer["r2"],
+                    racer["r3"],
+                    racer["r4"],
+                    racer["r5"],
+                    racer["r6"],
                 ]
 
                 if results[0] > -1:
@@ -64,6 +70,7 @@ def convertFile(file):
             header += ["winscore"]
             header += ["place", "placeid", "racenumber", ]
             header += ["number", "name", "age", "area", "weight", "rank", "win_all", "sec_all", "win_cur", "sec_cur", "motor_no", "motor_ratio", "boat_no", "boat_ratio"]
+            header += ["r1", "r2", "r3", "r4", "r5", "r6"]
             # for i in range(1, 7):
             #     header += [f"number{i}", f"name{i}", f"age{i}", f"area{i}", f"weight{i}", f"rank{i}", f"win_all{i}", f"sec_all{i}", f"win_cur{i}", f"sec_cur{i}"]
 

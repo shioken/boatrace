@@ -9,7 +9,7 @@ def trimLine(line):
     return re.sub('[ ]+', ' ', re.sub(r"[\u3000]", "", line)).split(' ')
 
 def parsePlayer(line):
-    (number, id, name, age, area, weight, rank, win_all, sec_all, win_cur, sec_cur, motor_no, motor_ratio, boat_no, boat_ratio) = (
+    (number, id, name, age, area, weight, rank, win_all, sec_all, win_cur, sec_cur, motor_no, motor_ratio, boat_no, boat_ratio, season_result) = (
         int(line[:1]),
         line[2:6],
         line[6:10],
@@ -24,7 +24,8 @@ def parsePlayer(line):
         int(line[41:44]),
         float(line[44:50]),
         int(line[50:53]),
-        float(line[53:59])
+        float(line[53:59]),
+        line[60:66],
     )
 
     obj = {}
@@ -42,6 +43,10 @@ def parsePlayer(line):
     obj["motor_ratio"] = motor_ratio
     obj["boat_no"] = boat_no
     obj["boat_ratio"] = boat_ratio
+
+    season_result = season_result.replace(' ', '0')
+    for i in range(6):
+        obj[f"r{i + 1}"] = season_result[i:i + 1]
 
     # print(obj)
 
