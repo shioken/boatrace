@@ -130,21 +130,38 @@ def parseRacelistFile(filename):
 
 def parseResult(line):
     if not 'R' in line:
-        return (0, 0, 0)    # 同着の場合。とりあえず無視する
+        return None    # 同着の場合。とりあえず無視する
 
     racenumber = int(line[:line.find('R')])
     # print('race', racenumber)
 
+    res = {}
+
     if '中　止' in line:
         # print('中止')
-        return (-1, -1, -1)
+        res["1st"] = -1
+        res["2nd"] = -1
+        res["3rd"] = -1
+        return res
     if '不成立' in line:
-        return (-1, -1, -1)
+        res["1st"] = -1
+        res["2nd"] = -1
+        res["3rd"] = -1
+        return res
 
-    first = int(line[15:16])
-    second = int(line[17:18])
-    third = int(line[19:20])
-    return (first, second, third)
+    tr = trimLine(line.strip())
+    print(tr)
+
+    res["1st"] = int(tr[1][0:1])
+    res["2nd"] = int(tr[1][2:3])
+    res["3rd"] = int(tr[1][4:5])
+
+    res["tierce"] = int(tr[2])      # 3連単
+    res["trio"] = int(tr[4])        # 3連複
+    res["quinella"] = int(tr[6])    # 2連単
+    res["show"] = int(tr[8])        # 2連複
+
+    return res
     
 def parseResultFile(filename):
     # print(filename)
@@ -173,12 +190,13 @@ def parseResultFile(filename):
                 nt = False
             elif rt:
                 fst = parseResult(line)
-                if not fst == (0, 0, 0):
+                if not fst is None:
                     rn += 1
                     result = {}
                     result["place"] = place
                     result["racenumber"] = rn
-                    result["results"] = list(fst)
+                    # result["results"] = list(fst)
+                    result.update(fst)
                     results.append(result)
                     if rn == 12:
                         rt = False
