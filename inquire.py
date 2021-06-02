@@ -78,9 +78,10 @@ def inquire(target):
 
         print("")        
         print(f"レース数:{total_race}, 総投資額:{total_bet:8,} 3連単({tierce_count:2}):{tierce_inquire:8,}({tierce_inquire - total_bet:8,}) 3連複({trio_count:2}):{trio_inquire:8,}(({trio_inquire - total_bet:8,})")
-        print(
-            f"回収率 3連単:{tierce_inquire / total_bet * 100:6.2f}% 3連複:{trio_inquire / total_bet * 100:6.2f}%")
+        print(f"当選率 3連単:{tierce_count / total_race * 100:6.2f}% 3連複:{trio_count / total_race * 100:6.2f}%")
+        print(f"回収率 3連単:{tierce_inquire / total_bet * 100:6.2f}% 3連複:{trio_inquire / total_bet * 100:6.2f}%")
 
+        print("")
         print(f"3連単全掛: {total_all_bet:8,} 回収率: {total_all_bet / (total_race * 100 * 120) * 100:6.2f}%")
 if __name__ == '__main__':
     if len(sys.argv) == 2:

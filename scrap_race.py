@@ -37,11 +37,9 @@ def getFile(url, filename, force=False):
         except:
             print("except")
 
-
-def scrap_yesterday():
-    tomorrow = datetime.today() + timedelta(days=-1)
-    stoday = tomorrow.strftime("%y%m%d")
-    stmonth = tomorrow.strftime("%Y%m")
+def scrap_file(date):
+    stoday = date.strftime("%y%m%d")
+    stmonth = date.strftime("%Y%m")
 
     dir = f'{target_url}B/{stmonth}/'
     filename = f'b{stoday}.lzh'
@@ -55,25 +53,19 @@ def scrap_yesterday():
     save_dir = f'k_lzh/{filename}'
     getFile(kurl, save_dir, True)
 
+
+def scrap_yesterday():
+    yesterday = datetime.today() + timedelta(days=-1)
+    scrap_file(yesterday)
+
+
 def scrap_today():
     today = datetime.today()
-    stoday = today.strftime("%y%m%d")
-    stmonth = today.strftime("%Y%m")
-    dir = f'{target_url}B/{stmonth}/'
-    filename = f'b{stoday}.lzh'
-    lurl = f'{dir}{filename}'
-    save_dir = f'b_lzh/{filename}'
-    getFile(lurl, save_dir, True)
+    scrap_file(today)
 
 def scrap_tommorow():
     tomorrow = datetime.today() + timedelta(days=1)
-    stoday = tomorrow.strftime("%y%m%d")
-    stmonth = tomorrow.strftime("%Y%m")
-    dir = f'{target_url}B/{stmonth}/'
-    filename = f'b{stoday}.lzh'
-    lurl = f'{dir}{filename}'
-    save_dir = f'b_lzh/{filename}'
-    getFile(lurl, save_dir, True)
+    scrap_file(tomorrow)
 
 def scrap(date):
     year = date[:4]
