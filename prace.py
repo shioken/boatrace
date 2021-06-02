@@ -150,7 +150,7 @@ def parseResult(line):
         return res
 
     tr = trimLine(line.strip())
-    print(tr)
+    # print(tr)
 
     res["1st"] = int(tr[1][0:1])
     res["2nd"] = int(tr[1][2:3])
