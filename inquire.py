@@ -35,6 +35,8 @@ def inquire(target):
         total_bet = 0
         total_race = 0
 
+        total_all_bet = 0
+
         for place in vjson:
             print(place["name"])
             for race in place["races"]:
@@ -68,6 +70,8 @@ def inquire(target):
                         
                         vline += " "
                     print(vline)
+
+                    total_all_bet += result['tierce']
                 else:
                     print(f"{race['number']}R レース不成立")
 
@@ -77,6 +81,7 @@ def inquire(target):
         print(
             f"回収率 3連単:{tierce_inquire / total_bet * 100:6.2f}% 3連複:{trio_inquire / total_bet * 100:6.2f}%")
 
+        print(f"3連単全掛: {total_all_bet:8,} 回収率: {total_all_bet / (total_race * 100 * 120) * 100:6.2f}%")
 if __name__ == '__main__':
     if len(sys.argv) == 2:
         inquire(sys.argv[1])
