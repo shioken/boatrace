@@ -59,6 +59,7 @@ def show_predictit(pname, area=""):
                         jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][3]}")
                         jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][4]}")
                         jr["votes"].append(f"{votes[i][0]}-{votes[i][2]}-{votes[i][3]}")
+
                         jrs.append(jr)
                     
             # print(json.dumps(all_votes, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': ')))
