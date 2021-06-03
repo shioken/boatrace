@@ -38,15 +38,19 @@ def check_all_inquire(date):
                         tierce_val = result_set["tierce"]
                         # print(tierce_set, tierce_val)
                         line += f"{tierce_set} {tierce_val:>8,} "
-                        votes_count = len(votes)
-                        all_race_count += 1
-                        all_place_bet += 100 * votes_count
+                        # votes_count = len(votes)
+                        votes_count = 0
                         line += f"購入点数:{votes_count:>4} {100 * votes_count:>8,} "
                         for vote in votes:
-                            if vote["order"] == tierce_set:
-                                line += f"{vote['order']} {tierce_val:>8,}"
-                                all_place_return += tierce_val
-                                all_hit += 1
+                            if vote["calculated_odds"] < 9999 and vote["calculated_odds"] > 0:  # 値を変動すると倍率を絞れます
+                                votes_count += 1
+                                if vote["order"] == tierce_set:
+                                    line += f"{vote['order']} {tierce_val:>8,}"
+                                    all_place_return += tierce_val
+                                    all_hit += 1
+
+                        all_race_count += 1
+                        all_place_bet += 100 * votes_count
                         print(line)
 
             # if all_place_bet > 0:
