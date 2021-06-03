@@ -39,10 +39,13 @@ def check_odds(filename):
                         racers = race["racers"]
 
                         total_score = sum(map(lambda p: p["score"], racers))
-                        print(total_score)
+
                         for racer in racers:
                             print(racer["course"], racer["score"], racer["score"] / total_score)
 
+                        scores = list(map(lambda p: p["score"] / total_score, racers))
+
+                        total_ratio = 0
                         for i in range(6):
                             a1 = i
                             a2 = 0
@@ -57,18 +60,49 @@ def check_odds(filename):
                                     if a2 == a3:
                                         a3 += 1
                                 
-                                    ratio = 1 / (racers[a1]["score"] / total_score * racers[a2]["score"] / total_score * racers[a3]["score"] / total_score)
+                                    score_odds = 1 / (scores[a1] * scores[a2] * scores[a3])
                                     real_odds = oj[f"{a1 + 1}"][f"{a2 + 1}"][f"{a3 + 1}"]
 
-                                    starmark = ""
-                                    if ratio < real_odds:
-                                        starmark = "*"
-                                    print(f"{a1 + 1}-{a2 + 1}-{a3 + 1} {ratio:>10.7f} : {real_odds} {starmark}")
+                                    total_ratio += 1 / score_odds
 
                                     a3 += 1
 
+                                a2 += 1
+
+                        high_expectations = []
+                        for i in range(6):
+                            a1 = i
+                            a2 = 0
+                            for j in range(5):
+                                if a1 == a2:
+                                    a2 += 1
+
+                                a3 = 0
+                                for k in range(4):
+                                    if a1 == a3:
+                                        a3 += 1
+                                    if a2 == a3:
+                                        a3 += 1
+
+                                    score_odds = 1 / ((scores[a1] * scores[a2] * scores[a3]) / total_ratio)
+                                    real_odds = oj[f"{a1 + 1}"][f"{a2 + 1}"][f"{a3 + 1}"]
+
+                                    starmark = ""
+                                    if score_odds < real_odds:
+                                        starmark = "*"
+                                        ticket = {"order": f"{a1 + 1}-{a2 + 1}-{a3 + 1}", "calculated_odds": score_odds, "real_odds": real_odds}
+                                        high_expectations.append(ticket)
+
+
+                                    # print(f"{a1 + 1}-{a2 + 1}-{a3 + 1} {score_odds:>8.1f} : {real_odds} {starmark}")
+
+                                    a3 += 1
 
                                 a2 += 1
+
+                        high_expectations.sort(key=lambda o: o["calculated_odds"])
+                        for exp in high_expectations:
+                            print(f"{exp['order']} {exp['calculated_odds']:>8.3f} {exp['real_odds']:>8.3f}")
 
 
 def parseRace(date, place, race):
