@@ -57,8 +57,8 @@ def parsePlayer(line):
 def parseRacelistFile(filename):
     # print(filename)
 
-
-    places = ['児島', '琵琶湖', '戸田', '宮島', '福岡', '桐生', '大村', '津', '多摩川', '三国', 'びわこ', '鳴門', '住之江', '若松', '丸亀', '平和島', '下関', '浜名湖', '尼崎', '蒲郡', '芦屋', '常滑', '江戸川', '唐津', '徳山']
+    places = {'桐生':1, '戸田':2, '江戸川':3, '平和島':4, '多摩川':5, '浜名湖':6, '蒲郡':7,
+              '常滑':8, '津':9, '三国':10, 'びわこ':11, '琵琶湖':11, '住之江':12, '尼崎':13, '鳴門':14, '丸亀':15, '児島':16, '宮島':17, '徳山':18, '下関':19, '若松':20, '芦屋':21, '福岡':22, '唐津':23, '大村':24, }
     
     date = filename[filename.rfind('/') + 1: filename.find('.')]
 
@@ -112,7 +112,7 @@ def parseRacelistFile(filename):
 
                             race = {}
                             race["place"] = place
-                            race["placeid"] = places.index(place)
+                            race["placeid"] = places[place]
                             race["racenumber"] = racenumber
                         else:
                             # 次の行から選手が出てくる
@@ -156,10 +156,17 @@ def parseResult(line):
     res["2nd"] = int(tr[1][2:3])
     res["3rd"] = int(tr[1][4:5])
 
-    res["tierce"] = int(tr[2])      # 3連単
-    res["trio"] = int(tr[4])        # 3連複
-    res["quinella"] = int(tr[6])    # 2連単
-    res["show"] = int(tr[8])        # 2連複
+    res["tierce"] = int(tr[2])  # 3連単
+    if re.findall('特払い|不成立', tr[3]):
+        res["show"] = 70
+        tr.insert(3, "70")
+    else:
+        res["trio"] = int(tr[4])        # 3連複
+    res["quinella"] = int(tr[6])  # 2連単
+    if '特払い' in tr[7]:
+        res["show"] = 70
+    else:
+        res["show"] = int(tr[8])        # 2連複
 
     return res
     
