@@ -4,3 +4,4 @@ venv
 remove.sh
 csv.zip
 test.py
+__pycache__
