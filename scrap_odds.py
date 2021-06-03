@@ -14,16 +14,26 @@ def scrap_odds(date, place, race):
     if len(date) == 6:
         date = f'20{date}'
 
-    placeid = places[place]
+    placeid = int(place) if place.isdigit() else places[place]
     print(date, f"{placeid:02}", race)
 
     target_url = f'https://www.boatrace.jp/owpc/pc/race/odds3t?rno={race}&jcd={placeid:02}&hd={date}'
+    print(target_url)
 
-    r = requests.get(target_url)
+    try:
+        r = requests.get(target_url)
+        r.raise_for_status()
+    except:
+        print("An error occurred while retrieving the web page.")
+        return
+
     soup = BeautifulSoup(r.text, "html.parser")
 
     # table = soup.select('tbody.is-p3-0')
     tds = soup.select('td.oddsPoint')
+
+    if len(tds) == 0:
+        return
 
     matrix = []
     for i in range(6):
@@ -72,6 +82,8 @@ def scrap_odds(date, place, race):
     with open(jsonfilename, 'w', encoding='utf-8') as jf:
         json.dump(odds_table, jf, ensure_ascii=False, indent=4)
         print(f'output: {jsonfilename}')
+
+        return jsonfilename
 
 if __name__ == '__main__':
     if len(sys.argv) == 4:

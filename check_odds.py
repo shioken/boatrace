@@ -97,6 +97,7 @@ def check_odds(filename):
                                         ticket = {"order": f"{a1 + 1}-{a2 + 1}-{a3 + 1}",
                                                   "calculated_odds": score_odds, "real_odds": real_odds}
                                         high_expectations.append(ticket)
+                                    
 
 
                         print("")
