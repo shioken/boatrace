@@ -42,13 +42,17 @@ def scrap_odds(date, place, race):
             odds_value = float(tds[idx].get_text())
             matrix[a1][a2][a3] = odds_value
 
+    odds_table = {}
+
     for i in range(6):
         a1 = i
         a2 = 0
+        odds_table[f"{a1 + 1}"] = {}
         for j in range(5):
             if a2 == a1:
                 a2 += 1
 
+            odds_table[f"{a1 + 1}"][f"{a2 + 1}"] = {}
             a3 = 0
             for k in range(4):
                 if a3 == a1:
@@ -57,13 +61,17 @@ def scrap_odds(date, place, race):
                     a3 += 1
 
                 print(f"{a1 + 1}-{a2 + 1}-{a3 + 1}: {matrix[i][j][k]:3.1f}")
+                odds_table[f"{a1 + 1}"][f"{a2 + 1}"][f"{a3 + 1}"] = matrix[i][j][k]
 
                 a3 += 1
             
             a2 += 1
 
 
-
+    jsonfilename = f"odds/{date[2:]}{placeid:02}{int(race):02}.json"
+    with open(jsonfilename, 'w', encoding='utf-8') as jf:
+        json.dump(odds_table, jf, ensure_ascii=False, indent=4)
+        print(f'output: {jsonfilename}')
 
 if __name__ == '__main__':
     if len(sys.argv) == 4:
