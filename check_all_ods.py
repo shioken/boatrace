@@ -7,6 +7,8 @@ import check_odds as co
 def check_all_odds(date):
     files = glob.glob(f'odds/o{date}*.json')
     print(len(files))
+    for file in files:
+        co.check_odds(file)
 
 
 if __name__ == '__main__':

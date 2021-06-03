@@ -65,15 +65,20 @@ def check_odds(filename):
                                 
                                 a3 = 0
                                 for k in range(4):
-                                    if a1 == a3:
+                                    while a1 == a3 or a2 == a3:
                                         a3 += 1
-                                    if a2 == a3:
-                                        a3 += 1
-                                
+                                    # if a1 == a3:
+                                    #     a3 += 1
+                                    # if a2 == a3:
+                                    #     a3 += 1
+
+                                    print(a1 + 1, a2 + 1, a3 + 1)
+
                                     score_odds = 1 / (scores[a1] * scores[a2] / delta_a2 * scores[a3] / delta_a3)
                                     real_odds = oj[f"{a1 + 1}"][f"{a2 + 1}"][f"{a3 + 1}"]
 
                                     score_matrix[a1][a2][a3] = {"order": f"{a1 + 1}-{a2 + 1}-{a3 + 1}", "calculated_odds": score_odds, "real_odds": real_odds}
+                                    print(score_matrix[a1][a2][a3])
 
                                     total_ratio += 1 / score_odds
 
@@ -105,6 +110,10 @@ def check_odds(filename):
                         for exp in high_expectations:
                             print(f"{exp['order']} {exp['calculated_odds']:>8.3f} {exp['real_odds']:>8.3f}")
 
+                        votesfile = f"votes_odds/v{fn[1:]}"
+                        with open(votesfile, 'w', encoding='utf-8') as vf:
+                            json.dump(high_expectations, vf, ensure_ascii=False, indent=4)
+                            return votesfile
 
 def parseRace(date, place, race):
     if len(date) == 4:

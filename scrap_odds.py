@@ -65,9 +65,7 @@ def scrap_odds(date, place, race):
             odds_table[f"{a1 + 1}"][f"{a2 + 1}"] = {}
             a3 = 0
             for k in range(4):
-                if a3 == a1:
-                    a3 += 1
-                if a3 == a2:
+                while a1 == a3 or a2 == a3:
                     a3 += 1
 
                 # print(f"{a1 + 1}-{a2 + 1}-{a3 + 1}: {matrix[i][j][k]:3.1f}")
