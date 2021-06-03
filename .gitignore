@@ -3,3 +3,4 @@ fan/*.txt
 venv
 remove.sh
 csv.zip
+test.py
