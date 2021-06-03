@@ -9,8 +9,12 @@ def output_json(json):
     for place in json:
         print(place["name"])
         for race in place["races"]:
-            print(
-                f"{race['number']:2}R ({race['std']:>5.3f}) {race['votes'][0]} {race['votes'][1]} {race['votes'][2]} {race['votes'][3]}")
+            line = f"{race['number']:2}R ({race['std']:>5.3f}) "
+            for v in race['votes']:
+                line += f'{v} '
+                # print(
+                #     f"{race['number']:2}R ({race['std']:>5.3f}) {race['votes'][0]} {race['votes'][1]} {race['votes'][2]} {race['votes'][3]}")
+            print(line)
 
 def show_predictit(pname, area=""):
     filepath = f'predicted/p{pname}.json'
@@ -54,10 +58,10 @@ def show_predictit(pname, area=""):
                         jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][2]}")
                         jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][3]}")
                         jr["votes"].append(f"{votes[i][0]}-{votes[i][2]}-{votes[i][3]}")
-                        jr["votes"].append(f"{votes[i][1]}-{votes[i][2]}-{votes[i][3]}")
+                        jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][4]}")
+                        # jr["votes"].append(f"{votes[i][1]}-{votes[i][2]}-{votes[i][3]}")
                         jrs.append(jr)
-                        print(
-                            f"{i + 1:>2}R {votes[i][0]}-{votes[i][1]}-{votes[i][2]}")
+                        # print(f"{i + 1:>2}R {votes[i][0]}-{votes[i][1]}-{votes[i][2]}")
                     
             # print(json.dumps(all_votes, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': ')))
             print("")
