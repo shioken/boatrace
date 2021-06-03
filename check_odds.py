@@ -45,13 +45,23 @@ def check_odds(filename):
 
                         scores = list(map(lambda p: p["score"] / total_score, racers))
 
+                        score_matrix = {}
                         total_ratio = 0
                         for i in range(6):
                             a1 = i
                             a2 = 0
+
+                            score_matrix[a1] = {}
+
+                            delta_a2 = total_score - scores[a1]
+
                             for j in range(5):
                                 if a1 == a2:
                                     a2 += 1
+
+                                score_matrix[a1][a2] = {}
+
+                                delta_a3 = delta_a2 - scores[a2]
                                 
                                 a3 = 0
                                 for k in range(4):
@@ -60,8 +70,10 @@ def check_odds(filename):
                                     if a2 == a3:
                                         a3 += 1
                                 
-                                    score_odds = 1 / (scores[a1] * scores[a2] * scores[a3])
+                                    score_odds = 1 / (scores[a1] * scores[a2] / delta_a2 * scores[a3] / delta_a3)
                                     real_odds = oj[f"{a1 + 1}"][f"{a2 + 1}"][f"{a3 + 1}"]
+
+                                    score_matrix[a1][a2][a3] = {"order": f"{a1 + 1}-{a2 + 1}-{a3 + 1}", "calculated_odds": score_odds, "real_odds": real_odds}
 
                                     total_ratio += 1 / score_odds
 
@@ -70,36 +82,24 @@ def check_odds(filename):
                                 a2 += 1
 
                         high_expectations = []
-                        for i in range(6):
-                            a1 = i
-                            a2 = 0
-                            for j in range(5):
-                                if a1 == a2:
-                                    a2 += 1
+                        for a1 in score_matrix.keys():
+                            sm1 = score_matrix[a1]
+                            for a2 in sm1.keys():
+                                sm2 = score_matrix[a1][a2]
+                                for a3 in sm2.keys():
+                                    score_matrix[a1][a2][a3]['calculated_odds'] /= total_ratio
 
-                                a3 = 0
-                                for k in range(4):
-                                    if a1 == a3:
-                                        a3 += 1
-                                    if a2 == a3:
-                                        a3 += 1
-
-                                    score_odds = 1 / ((scores[a1] * scores[a2] * scores[a3]) / total_ratio)
-                                    real_odds = oj[f"{a1 + 1}"][f"{a2 + 1}"][f"{a3 + 1}"]
-
+                                    score_odds = score_matrix[a1][a2][a3]['calculated_odds']
+                                    real_odds = score_matrix[a1][a2][a3]['real_odds']
                                     starmark = ""
                                     if score_odds < real_odds:
                                         starmark = "*"
-                                        ticket = {"order": f"{a1 + 1}-{a2 + 1}-{a3 + 1}", "calculated_odds": score_odds, "real_odds": real_odds}
+                                        ticket = {"order": f"{a1 + 1}-{a2 + 1}-{a3 + 1}",
+                                                  "calculated_odds": score_odds, "real_odds": real_odds}
                                         high_expectations.append(ticket)
 
 
-                                    # print(f"{a1 + 1}-{a2 + 1}-{a3 + 1} {score_odds:>8.1f} : {real_odds} {starmark}")
-
-                                    a3 += 1
-
-                                a2 += 1
-
+                        print("")
                         high_expectations.sort(key=lambda o: o["calculated_odds"])
                         for exp in high_expectations:
                             print(f"{exp['order']} {exp['calculated_odds']:>8.3f} {exp['real_odds']:>8.3f}")
