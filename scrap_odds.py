@@ -49,8 +49,12 @@ def scrap_odds(date, place, race):
             a2 = int(i / 4)
             a3 = i % 4
 
-            odds_value = float(tds[idx].get_text())
-            matrix[a1][a2][a3] = odds_value
+            if tds[idx].get_text().isdigit():
+                odds_value = float(tds[idx].get_text())
+                matrix[a1][a2][a3] = odds_value
+            else:
+                matrix[a1][a2][a3] = 1
+
 
     odds_table = {}
 
