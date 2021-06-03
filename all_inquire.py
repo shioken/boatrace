@@ -53,10 +53,6 @@ def check_all_inquire(date):
                         all_place_bet += 100 * votes_count
                         print(line)
 
-            # if all_place_bet > 0:
-            #     print(
-            #         f"総投資額: {all_place_bet:8,} 回収額: {all_place_return:8,} 収支: {all_place_return - all_place_bet:8,} 回収率: {all_place_return / all_place_bet * 100:>10.2f}%")
-
             all_bet += all_place_bet
             all_return += all_place_return
 
