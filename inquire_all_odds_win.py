@@ -57,7 +57,7 @@ def check_all_inquire(date):
     if all_bet > 0:
         print(
             f"総投資額: {all_bet:8,} 回収額: {all_return:8,} 収支: {all_return - all_bet:8,} 回収率: {all_return / all_bet * 100:>10.2f}%")
-        print(f"総レース数: {all_race_count:>3} 当選レース数: {all_hit:>3} 当選率: {all_hit / all_race_count * 100:>5.2f}")
+        print(f"総レース数: {all_race_count:>3} 当選レース数: {all_hit:>3} 当選率: {all_hit / all_race_count * 100:>5.2f}%")
                     
 
 if __name__ == '__main__':

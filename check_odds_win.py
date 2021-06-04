@@ -52,6 +52,7 @@ def check_odds(filename):
                         vote_array.sort(key=lambda o: o["calc_odds"])
 
                         filtered_array = []
+
                         total_bet = 0
                         min_ret = 1000000
                         for vote in vote_array:
@@ -61,6 +62,9 @@ def check_odds(filename):
                                 filtered_array.append(vote)
                             else:
                                 break
+
+                        # 全レース1だけ購入するケース
+                        # filtered_array.append({"order": 1, "calc_odds": odds_array[0], "real_odds": oj[0]["win"]})
 
                         votesfile = f"votes_odds/vw{fn[1:]}"
                         with open(votesfile, 'w', encoding='utf-8') as vf:
