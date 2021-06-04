@@ -72,7 +72,6 @@ def scrap_odds(date, place, race):
                 while a1 == a3 or a2 == a3:
                     a3 += 1
 
-                # print(f"{a1 + 1}-{a2 + 1}-{a3 + 1}: {matrix[i][j][k]:3.1f}")
                 odds_table[f"{a1 + 1}"][f"{a2 + 1}"][f"{a3 + 1}"] = matrix[i][j][k]
 
                 a3 += 1

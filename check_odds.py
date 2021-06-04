@@ -67,10 +67,6 @@ def check_odds(filename):
                                 for k in range(4):
                                     while a1 == a3 or a2 == a3:
                                         a3 += 1
-                                    # if a1 == a3:
-                                    #     a3 += 1
-                                    # if a2 == a3:
-                                    #     a3 += 1
 
                                     print(a1 + 1, a2 + 1, a3 + 1)
 
