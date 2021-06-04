@@ -41,7 +41,8 @@ def scrap_odds(date, place, race):
         for i, td in enumerate(tds):
             c = i % 6
             if i < 6:
-                rate = {"win": float(td.get_text())}
+                tdtext = td.get_text()
+                rate = {"win": 1 if '欠場' in tdtext else float(tdtext)}
                 odds.append(rate)
             else:
                 odds[c]["double_win"] = td.get_text()

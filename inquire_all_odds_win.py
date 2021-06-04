@@ -16,9 +16,9 @@ def check_all_inquire(date):
     all_race_count = 0
     for file in files:
         basename = os.path.basename(file)
-        date = basename[1:7]
-        placeid = int(basename[7:9])
-        racenumber = int(basename[9:11])
+        date = basename[2:8]
+        placeid = int(basename[8:10])
+        racenumber = int(basename[10:12])
 
         resultfile = f"json/m{date}.json"
 
@@ -34,19 +34,17 @@ def check_all_inquire(date):
                     result_set = race["result"]
                     if result_set['1st'] > -1:
                         line = f"{race['place']:　<3} {racenumber:>2}R "
-                        tierce_set = f"{result_set['1st']}-{result_set['2nd']}-{result_set['3rd']}"
-                        tierce_val = result_set["tierce"]
-                        # print(tierce_set, tierce_val)
-                        line += f"{tierce_set} {tierce_val:>8,} "
-                        # votes_count = len(votes)
-                        votes_count = 0
+                        win_course = result_set['1st']
+                        win_val = result_set["win"]
+                        line += f"{win_course} {win_val:>8,} "
+                        votes_count = len(votes)
                         line += f"購入点数:{votes_count:>4} {100 * votes_count:>8,} "
                         for vote in votes:
-                            if vote["calculated_odds"] < 9999 and vote["calculated_odds"] > 0:  # 値を変動すると倍率を絞れます
+                            if vote["calc_odds"] < 9999 and vote["calc_odds"] > 0:  # 値を変動すると倍率を絞れます
                                 votes_count += 1
-                                if vote["order"] == tierce_set:
-                                    line += f"{vote['order']} {tierce_val:>8,}"
-                                    all_place_return += tierce_val
+                                if vote["order"] == win_course:
+                                    line += f"{vote['order']} {win_val:>8,}"
+                                    all_place_return += win_val
                                     all_hit += 1
 
                         all_race_count += 1

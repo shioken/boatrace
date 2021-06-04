@@ -19,7 +19,7 @@ def check_odds(filename):
     day = fn[5:7]
     placeid = int(fn[7:9])
     racenumber = int(fn[9:11])
-    print(year, month, day, placeid, racenumber)
+    # print(year, month, day, placeid, racenumber)
 
     prefile = f"predicted/p{year}{month}{day}.json"
     if not os.path.exists(prefile):
@@ -32,10 +32,8 @@ def check_odds(filename):
 
         for place in pj["places"]:
             if placeid == places[place["name"]]:
-                print("found: ", place["name"])
                 for race in place["races"]:
                     if racenumber == race["number"]:
-                        print(race["name"])
                         racers = race["racers"]
 
                         total_score = sum(map(lambda p: p["score"], racers))
@@ -48,12 +46,26 @@ def check_odds(filename):
                         vote_array = []
                         for i, odds in enumerate(oj):
                             if odds_array[i] < odds["win"]:
-                                print(f"{i + 1:>2} {odds_array[i]:>5.1f} {odds['win']:>5.1f}")
-                                vote_array.append({"course": i + 1, "calc_odds": odds_array[i], "real_odds": odds["win"]})
+                                # print(f"{i + 1:>2} {odds_array[i]:>5.1f} {odds['win']:>5.1f}")
+                                vote_array.append({"order": i + 1, "calc_odds": odds_array[i], "real_odds": odds["win"]})
+
+                        vote_array.sort(key=lambda o: o["calc_odds"])
+
+                        filtered_array = []
+                        total_bet = 0
+                        min_ret = 1000000
+                        for vote in vote_array:
+                            total_bet += 100
+                            min_ret = min_ret if min_ret < vote["real_odds"] * 100 else vote["real_odds"] * 100
+                            if total_bet < min_ret:
+                                filtered_array.append(vote)
+                            else:
+                                break
 
                         votesfile = f"votes_odds/vw{fn[1:]}"
                         with open(votesfile, 'w', encoding='utf-8') as vf:
-                            json.dump(vote_array, vf, ensure_ascii=False, indent=4)
+                            json.dump(filtered_array, vf, ensure_ascii=False, indent=4)
+                            print(f"out: {votesfile}")
                             return votesfile
 
 def parseRace(date, place, race):
