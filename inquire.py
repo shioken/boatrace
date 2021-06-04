@@ -45,6 +45,8 @@ def inquire(target, minthreshold = 0.0, maxthreshold = 1.0):
         out_trio_count = 0
         total_bet = 0
         total_race = 0
+        win_count = 0
+        win_inquire = 0
 
         total_all_bet = 0
 
@@ -56,7 +58,7 @@ def inquire(target, minthreshold = 0.0, maxthreshold = 1.0):
                 sorted_order = sorted(order)
                 if sorted_order[0] > 0:
                     total_race += 1
-                    vline = f"{race['number']:2}R 3連単: {order[0]}-{order[1]}-{order[2]} 配当{result['tierce']:8,} / 3連複: {sorted_order[0]}-{sorted_order[1]}-{sorted_order[2]} 配当 {result['trio']:8,}"
+                    vline = f"{race['number']:2}R 3連単: {order[0]}-{order[1]}-{order[2]} 配当{result['tierce']:8,} / 3連複: {sorted_order[0]}-{sorted_order[1]}-{sorted_order[2]} 配当 {result['trio']:8,} / 単勝: {order[0]} 配当 {result['win']:6,}"
                     vline += " "
                     if race["std"] >= minthreshold and race["std"] <= maxthreshold:
                         isRaceWin = [False, False]
@@ -93,6 +95,12 @@ def inquire(target, minthreshold = 0.0, maxthreshold = 1.0):
                             
                             vline += " "
 
+                        vline += f"{race['votewin']}"
+                        if race['votewin'] == result['1st']:
+                            vline += "*"
+                            win_count += 1
+                            win_inquire += result['win']
+
                         if isRaceWin[0] is False:
                             out_tierce_std += race["std"]
                             out_tierce_count += 1
@@ -111,9 +119,9 @@ def inquire(target, minthreshold = 0.0, maxthreshold = 1.0):
         print(f"{year}/{month:02}/{day:02}")
         if total_bet > 0 and total_race > 0:
             print(f"レース数:{total_race}")
-            print(f"総投資額:{total_bet:8,} 3連単({tierce_count:2}):{tierce_inquire:8,}({tierce_inquire - total_bet:8,}) 3連複({trio_count:2}):{trio_inquire:8,}({trio_inquire - total_bet:8,})")
-            print(f"当選率 3連単:{tierce_count / total_race * 100:8.2f}% 3連複:{trio_count / total_race * 100:6.2f}%")
-            print(f"回収率 3連単:{tierce_inquire / total_bet * 100:8.2f}% 3連複:{trio_inquire / total_bet * 100:6.2f}%")
+            print(f"総投資額:{total_bet:8,} 3連単({tierce_count:2}):{tierce_inquire:8,}({tierce_inquire - total_bet:8,}) 3連複({trio_count:2}):{trio_inquire:8,}({trio_inquire - total_bet:8,}) 単勝({win_count:2}):{win_inquire:8,}({win_inquire - total_race * 100:>,})")
+            print(f"当選率 3連単:{tierce_count / total_race * 100:8.2f}% 3連複:{trio_count / total_race * 100:6.2f}% 単勝:{win_count / total_race * 100:6.2f}%")
+            print(f"回収率 3連単:{tierce_inquire / total_bet * 100:8.2f}% 3連複:{trio_inquire / total_bet * 100:6.2f}% 単勝:{win_inquire / total_race:>6.2f}%")
 
         print("")
         if tierce_count > 0 and trio_count > 0:
