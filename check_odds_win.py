@@ -40,16 +40,21 @@ def check_odds(filename):
 
                         total_score = sum(map(lambda p: p["score"], racers))
 
+                        odds_array = []
                         for racer in racers:
-                            print(racer["course"], racer["score"], racer["score"] / total_score)
+                            real_odds = 1 / (racer["score"] / total_score)
+                            odds_array.append(real_odds)
 
-                        scores = list(map(lambda p: p["score"] / total_score, racers))
+                        vote_array = []
+                        for i, odds in enumerate(oj):
+                            if odds_array[i] < odds["win"]:
+                                print(f"{i + 1:>2} {odds_array[i]:>5.1f} {odds['win']:>5.1f}")
+                                vote_array.append({"course": i + 1, "calc_odds": odds_array[i], "real_odds": odds["win"]})
 
-
-                        # votesfile = f"votes_odds/v{fn[1:]}"
-                        # with open(votesfile, 'w', encoding='utf-8') as vf:
-                        #     json.dump(high_expectations, vf, ensure_ascii=False, indent=4)
-                        #     return votesfile
+                        votesfile = f"votes_odds/vw{fn[1:]}"
+                        with open(votesfile, 'w', encoding='utf-8') as vf:
+                            json.dump(vote_array, vf, ensure_ascii=False, indent=4)
+                            return votesfile
 
 def parseRace(date, place, race):
     if len(date) == 4:

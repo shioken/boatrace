@@ -2,13 +2,13 @@
 import glob
 import os
 import sys
-import check_odds as co
+import check_odds_win as cow
 
 def check_all_odds(date):
-    files = glob.glob(f'odds/o{date}*.json')
+    files = glob.glob(f'odds/w{date}*.json')
     print(len(files))
     for file in files:
-        co.check_odds(file)
+        cow.check_odds(file)
 
 
 if __name__ == '__main__':

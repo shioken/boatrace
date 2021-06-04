@@ -170,6 +170,14 @@ def parseResult(line):
 
     return res
     
+
+def parseWin(line, place, racenumber, results):
+    print(place, racenumber)
+    tr = trimLine(line)
+    result = list(filter(lambda x: x['place'] == place and x['racenumber'] == racenumber, results))
+    if len(result) > 0:
+        result[0]["win"] = int(tr[3])
+
 def parseResultFile(filename):
     # print(filename)
 
@@ -187,6 +195,7 @@ def parseResultFile(filename):
     rn = 0
     results = []
     result = {}
+    racenumber = 0
     with open(filename, 'r') as f:
         while True:
             line = f.readline()
@@ -194,6 +203,7 @@ def parseResultFile(filename):
                 place = trimLine(line)[0]
                 place = place[: place.rfind('［')]
                 # print(place)
+                racenumber = 1
                 nt = False
             elif rt:
                 fst = parseResult(line)
@@ -217,6 +227,10 @@ def parseResultFile(filename):
                 elif '払戻金' in line:
                     rt = True
                     rn = 0
+                elif '単勝' in line:
+                    parseWin(line, place, racenumber, results)
+                    racenumber = 1 if racenumber + 1 == 13 else racenumber + 1
+                    
             else:
                 break
 
