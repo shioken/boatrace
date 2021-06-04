@@ -46,8 +46,6 @@ def scrap_odds(date, place, race):
             else:
                 odds[c]["double_win"] = td.get_text()
 
-    print(odds)
-
     jsonfilename = f"odds/w{date[2:]}{placeid:02}{int(race):02}.json"
     with open(jsonfilename, 'w', encoding='utf-8') as jf:
         json.dump(odds, jf, ensure_ascii=False, indent=4)
