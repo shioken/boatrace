@@ -3,5 +3,5 @@ fan/*.txt
 venv
 remove.sh
 csv.zip
-test.py
+test*.py
 __pycache__
