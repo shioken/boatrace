@@ -32,7 +32,7 @@ def show_predictit(pname, area=""):
                     for race in place["races"]:
                         print(race["number"], race["name"])
                         racers = race["racers"]
-                        sorted_racers = sorted(racers, key=lambda x: x["score"], reverse=True)
+                        sorted_racers = sorted(racers, key=lambda x: x["score"], reverse=False)
                         vote = []
                         for i, racer in enumerate(sorted_racers):
                             score = racer["score"]

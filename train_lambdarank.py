@@ -18,11 +18,11 @@ for i in range(1, 365 * 2 + 1):
 
 df = pd.concat(csvs)
 
-# df["order_dum"] = df["1st"] * 1 + df["2nd"] * 2 + df["3rd"] * 3
-# order = df["order_dum"].map(lambda x: 6 if x == 0 else x)
+df["order_dum"] = df["1st"] * 1 + df["2nd"] * 2 + df["3rd"] * 3
+order = df["order_dum"].map(lambda x: 6 if x == 0 else x)
 
-df["order_dum"] = df["1st"] * 10 + df["2nd"] * 5 + df["3rd"] * 3
-order = df["order_dum"].map(lambda x: x)
+# df["order_dum"] = df["1st"] * 10 + df["2nd"] * 5 + df["3rd"] * 3
+# order = df["order_dum"].map(lambda x: x)
 
 order.name = "order"
 
