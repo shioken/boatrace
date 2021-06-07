@@ -52,9 +52,9 @@ def show_predictit(pname, area=""):
                         jr["number"] = i + 1
                         jr["votes"] = []
                         jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][2]}")
-                        # jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][3]}")
-                        # jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][4]}")
-                        # jr["votes"].append(f"{votes[i][0]}-{votes[i][2]}-{votes[i][3]}")
+                        jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][3]}")
+                        jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][4]}")
+                        jr["votes"].append(f"{votes[i][0]}-{votes[i][2]}-{votes[i][3]}")
 
                         jr["votewin"] = votes[i][0]
 
