@@ -33,6 +33,8 @@ def inquire(target, minthreshold = 0.0, maxthreshold = 1.0):
         vjson = json.load(vf)
         rjson = json.load(rf)
 
+        tierce_one_count = 0
+        tierce_one_inquire = 0
         tierce_count = 0
         tierce_inquire = 0
         tierce_std = 0.0
@@ -62,7 +64,7 @@ def inquire(target, minthreshold = 0.0, maxthreshold = 1.0):
                     vline += " "
                     if race["std"] >= minthreshold and race["std"] <= maxthreshold:
                         isRaceWin = [False, False]
-                        for vote in race["votes"]:
+                        for no, vote in enumerate(race["votes"]):
                             bet = (int(vote[0:1]), int(vote[2:3]), int(vote[4:5]))
                             trio_bet = sorted(bet)
 
@@ -79,6 +81,10 @@ def inquire(target, minthreshold = 0.0, maxthreshold = 1.0):
                                 trio_count += 1
                                 trio_inquire += result['trio']
                                 trio_std += race["std"]
+
+                                if no == 0:
+                                    tierce_one_count += 1
+                                    tierce_one_inquire += result['tierce']
 
                                 isRaceWin[0] = True
                                 isRaceWin[1] = True
@@ -122,6 +128,9 @@ def inquire(target, minthreshold = 0.0, maxthreshold = 1.0):
             print(f"総投資額:{total_bet:8,} 3連単({tierce_count:2}):{tierce_inquire:8,}({tierce_inquire - total_bet:8,}) 3連複({trio_count:2}):{trio_inquire:8,}({trio_inquire - total_bet:8,}) 単勝({win_count:2}):{win_inquire:8,}({win_inquire - total_race * 100:>,})")
             print(f"当選率 3連単:{tierce_count / total_race * 100:8.2f}% 3連複:{trio_count / total_race * 100:6.2f}% 単勝:{win_count / total_race * 100:6.2f}%")
             print(f"回収率 3連単:{tierce_inquire / total_bet * 100:8.2f}% 3連複:{trio_inquire / total_bet * 100:6.2f}% 単勝:{win_inquire / total_race:>6.2f}%")
+            print(f"総投資額:{total_race * 100:8,} 3連単(1点)({tierce_one_count:2}):{tierce_one_inquire:8,}({tierce_one_inquire - total_race * 100:8,})")
+            print(f"回収率 3連単(1点):{tierce_one_inquire / (total_race * 100) * 100 :8.2f}%")
+
 
         print("")
         if tierce_count > 0 and trio_count > 0:

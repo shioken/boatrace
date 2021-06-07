@@ -11,8 +11,8 @@ files = sorted(glob.glob('csv/*.csv'))
 csvs = []
 
 # 新しいものから1年分件取得する
-for i in range(1, 365 * 2 + 1):
-# for i in range(1, 10):
+# for i in range(1, 365 * 2 + 1):
+for i, file in enumerate(files):
     csv = pd.read_csv(files[-i])
     csvs.append(csv)
 
@@ -96,7 +96,7 @@ lgb_clf = lgb.train(
     num_boost_round=250,
     valid_sets=[lgtrain, lgvalid],
     valid_names=['train', 'valid'],
-    #     early_stopping_rounds=100,
+    early_stopping_rounds=20,
     verbose_eval=5
 )
 

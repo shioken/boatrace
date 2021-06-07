@@ -37,7 +37,7 @@ def show_predictit(pname, area=""):
                         for i, racer in enumerate(sorted_racers):
                             score = racer["score"]
                             vote.append(racer["course"])
-                            print(racer["course"], racer["name"], f"{score * 100:>8.3f}%", f"{1 / score:>8.3f}")
+                            print(racer["course"], racer["name"], f"{score:>8.6f}")
                         print("")
                         votes.append(vote)
                     
@@ -52,9 +52,10 @@ def show_predictit(pname, area=""):
                         jr["number"] = i + 1
                         jr["votes"] = []
                         jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][2]}")
-                        jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][3]}")
-                        jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][4]}")
-                        jr["votes"].append(f"{votes[i][0]}-{votes[i][2]}-{votes[i][3]}")
+                        # jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][3]}")
+                        # jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][4]}")
+                        # jr["votes"].append(f"{votes[i][0]}-{votes[i][2]}-{votes[i][3]}")
+
                         jr["votewin"] = votes[i][0]
 
                         jrs.append(jr)
