@@ -10,6 +10,7 @@ import os
 import json
 import sys
 import util
+import re
 
 # with open('model/lambdarank.txt', 'r', encoding='utf-8') as lr:
 #     model_txt = lr.read()
@@ -23,7 +24,7 @@ def prediction(racers, lines, race):
         X, num_iteration=model.best_iteration)
 
     for i, pr in enumerate(predictions):
-        print(f"{(i + 1)} {pr:>10.8f}")
+        # print(f"{(i + 1)} {pr:>10.8f}")
 
         racer = race["racers"][i]
         racer["score"] = float(pr)
@@ -36,8 +37,11 @@ RANKMAP = {
     'B2': [0.0, 0.0, 0.0, 1.0],
 }
 
+places = {'桐生': 1, '戸田': 2, '江戸川': 3, '平和島': 4, '多摩川': 5, '浜名湖': 6, '蒲郡': 7,
+          '常滑': 8, '津': 9, '三国': 10, 'びわこ': 11, '琵琶湖': 11, '住之江': 12, '尼崎': 13, '鳴門': 14, '丸亀': 15, '児島': 16, '宮島': 17, '徳山': 18, '下関': 19, '若松': 20, '芦屋': 21, '福岡': 22, '唐津': 23, '大村': 24, }
 
-def parsePlayer(line):
+
+def parsePlayer(line, place):
     (number, id, name, age, area, weight, rank, win_all, sec_all, win_cur, sec_cur, motor_no, motor_ratio, boat_no, boat_ratio, season_result) = (
         float(line[:1]),
         line[2:6],
@@ -57,14 +61,16 @@ def parsePlayer(line):
         line[60:66],
     )
 
+    placeid = places[place]
+
     rank_val = RANKMAP[rank]
 
-    X = [float(number), float(weight), win_all, sec_all,
+    X = [float(placeid), float(number), float(weight), win_all, sec_all,
          win_cur, sec_cur, motor_ratio, boat_ratio]
 
-    # season_result = re.sub(r"[ FLSK]", "0", season_result)
-    # for i in range(6):
-    #     X += [float(season_result[i: i + 1])]
+    season_result = re.sub(r"[ FLSK]", "0", season_result)
+    for i in range(6):
+        X += [float(season_result[i: i + 1])]
 
     X += rank_val
 
@@ -109,7 +115,7 @@ def parseRacelistFile(filename, pfilename, jsonfile):
                     sl = line.strip()
                     olines.append(sl)
                     olines.append('\n')
-                    racer = parsePlayer(line)
+                    racer = parsePlayer(line, place)
                     pcount += 1
                     racers.append(racer)
                     jracer = {}
