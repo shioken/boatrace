@@ -16,12 +16,14 @@ for i, file in enumerate(files):
     csv = pd.read_csv(file)
     csvs.append(csv)
 
-    # if i > 365 * 2:
-    #     break
+    if i > 365 * 2:
+        break
 
 df = pd.concat(csvs)
 
-result = df["result"].map(lambda x: 1 if x == "01" else 2 if x == "02" else 3 if x == "03" else 4 if x == "04" else 5 if x == "05" else 6)
+df["result"] = df["result"].map(lambda x: 1 if x == "01" else 2 if x == "02" else 3 if x == "03" else 4 if x == "04" else 5 if x == "05" else 6)
+df["result"] = df["result"].max() - df["result"] + 1
+result = df["result"]
 
 queries = []
 cpid = -1

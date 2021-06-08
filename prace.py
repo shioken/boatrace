@@ -204,6 +204,7 @@ def parseResultFile(filename):
     inOrder = False
     orders = {}
     order = 0
+    inr = False # レースごとの結果の中の"不成立"を判定しない
     with open(filename, 'r') as f:
         while True:
             line = f.readline()
@@ -226,6 +227,8 @@ def parseResultFile(filename):
                     results.append(result)
                     if rn == 12:
                         rt = False
+                        ir = False
+                        inr = False
                 else:
                     print("同着スキップ")
             elif inOrder:
@@ -241,13 +244,15 @@ def parseResultFile(filename):
             elif line:
                 if 'BGN' in line:
                     nt = True
+                    inr = True
                 # elif 'END' in line:
                     # print('END')
                 elif '払戻金' in line:
                     rt = True
                     rn = 0
                 elif '不成立' in line:
-                    racenumber = 1 if racenumber + 1 == 13 else racenumber + 1
+                    if inr:
+                        racenumber = 1 if racenumber + 1 == 13 else racenumber + 1
                 elif '単勝' in line:
                     parseWin(line, place, racenumber, results)
                     racenumber = 1 if racenumber + 1 == 13 else racenumber + 1

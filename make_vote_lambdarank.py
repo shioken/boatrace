@@ -4,6 +4,7 @@ import re
 import os
 import json
 import sys
+import numpy as np
 
 def output_json(json):
     for place in json:
@@ -12,7 +13,10 @@ def output_json(json):
             line = f"{race['number']:2}R "
             for v in race['votes']:
                 line += f'{v} '
-            line += f'{race["votewin"]}'
+
+            if 'vorewin' in race:
+                line += f'{race["votewin"]}'
+
             print(line)
 
 def show_predictit(pname, area=""):
@@ -32,15 +36,22 @@ def show_predictit(pname, area=""):
                     for race in place["races"]:
                         print(race["number"], race["name"])
                         racers = race["racers"]
-                        sorted_racers = sorted(racers, key=lambda x: x["score"], reverse=False)
+                        sorted_racers = sorted(racers, key=lambda x: x["score"], reverse=True)
+                        scores = list(map(lambda x: x["score"], racers))
+                        std = np.std(scores)
+                        print(std)
                         vote = []
-                        for i, racer in enumerate(sorted_racers):
-                            score = racer["score"]
-                            vote.append(racer["course"])
-                            print(racer["course"], racer["name"], f"{score:>8.6f}")
-                        print("")
-                        votes.append(vote)
-                    
+                        if std > 0.7:
+                            for i, racer in enumerate(sorted_racers):
+                                score = racer["score"]
+                                vote.append(racer["course"])
+                                print(racer["course"], racer["name"], f"{score:>8.6f}")
+                            print("")
+                            votes.append(vote)
+                        else:
+                            print("skip this race")
+                            votes.append(vote)
+
                     print(place["name"])
                     jp = {}
                     jp["name"] = place["name"]
@@ -51,12 +62,13 @@ def show_predictit(pname, area=""):
                         jr = {}
                         jr["number"] = i + 1
                         jr["votes"] = []
-                        jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][2]}")
-                        jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][3]}")
-                        jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][4]}")
-                        jr["votes"].append(f"{votes[i][0]}-{votes[i][2]}-{votes[i][3]}")
+                        if len(votes[i]) > 0:
+                            jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][2]}")
+                            jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][3]}")
+                            jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][4]}")
+                            jr["votes"].append(f"{votes[i][0]}-{votes[i][2]}-{votes[i][3]}")
 
-                        jr["votewin"] = votes[i][0]
+                            jr["votewin"] = votes[i][0]
 
                         jrs.append(jr)
                     
