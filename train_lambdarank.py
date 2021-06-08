@@ -7,27 +7,21 @@ from sklearn.model_selection import train_test_split
 import glob
 import numpy as np
 
-files = sorted(glob.glob('csv/*.csv'))
+files = sorted(glob.glob('csv/*.csv'), reverse=True)
 csvs = []
 
 # 新しいものから1年分件取得する
 # for i in range(1, 365 * 2 + 1):
 for i, file in enumerate(files):
-    csv = pd.read_csv(files[-i])
+    csv = pd.read_csv(file)
     csvs.append(csv)
+
+    if i > 365 * 2:
+        break
 
 df = pd.concat(csvs)
 
-df["order_dum"] = df["1st"] * 1 + df["2nd"] * 2 + df["3rd"] * 3
-order = df["order_dum"].map(lambda x: 6 if x == 0 else x)
-
-# df["order_dum"] = df["1st"] * 10 + df["2nd"] * 5 + df["3rd"] * 3
-# order = df["order_dum"].map(lambda x: x)
-
-order.name = "order"
-
-df = pd.concat([df, order], axis=1)
-df = df.drop(["order_dum"], axis=1)
+result = df["result"].map(lambda x: 1 if x == "01" else 2 if x == "02" else 3 if x == "03" else 4 if x == "04" else 5 if x == "05" else 6)
 
 queries = []
 cpid = -1
@@ -42,7 +36,7 @@ for placeid, number in zip(df["placeid"], df["racenumber"]):
     else:
         queries[index] += 1
 
-df = df.drop(["1st", "2nd", "3rd", "place", "racenumber", "area", "name", "age", "motor_no", "boat_no"], axis=1)
+df = df.drop(["place", "racenumber", "area", "name", "age", "motor_no", "boat_no"], axis=1)
 
 ranks = ["A1", "A2", "B1", "B2"]
 for rank in ranks:
@@ -51,14 +45,13 @@ for rank in ranks:
     df = pd.concat([df, a], axis=1)
 df = df.drop(["rank"], axis=1)
 
-columns = list(df.columns)
-columns.remove("order")
+# columns = list(df.columns)
+# columns.remove("order")
 
-X = df[columns]
-y = df["order"].astype(int)
+X = df.drop(["result"], axis=1)
+y = result.astype(int)
 
 print(X.head(12))
-
 
 racecount = len(queries)
 test_race = int(racecount * 2 / 10)

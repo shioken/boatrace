@@ -3,12 +3,13 @@ import json
 import glob
 import os
 import csv
+import sys
 
-def convertFile(file):
+def convertFile(file, force=False):
     csvfilename = f'csv/{os.path.splitext(os.path.basename(file))[0]}.csv'
     print(file, csvfilename)
 
-    if os.path.exists(csvfilename):
+    if not force and os.path.exists(csvfilename):
         print(f"file {csvfilename} is exists")
         return
 
@@ -25,18 +26,23 @@ def convertFile(file):
         rows = []
         for race in data:
             result = race["result"]
-            results = result["results"]
 
             racers = race["racers"]
             for i, racer in enumerate(racers):
                 row = []
 
-                score = (0, 0, 0)
-                if (i + 1) in results:
-                    r = results.index(i + 1)
-                    score = scores[r]
+                # score = (0, 0, 0)
+                # if (i + 1) in results:
+                #     r = results.index(i + 1)
+                #     score = scores[r]
 
-                row += score
+                # row += score
+                # print(result)
+                key = f'c{str(i + 1)}'
+                if key in result:
+                    row.append(result[key])
+                else:
+                    row.append("")
 
                 row += [race["place"], race["placeid"], race["racenumber"]]
                 row += [
@@ -62,16 +68,17 @@ def convertFile(file):
                     racer["r6"],
                 ]
 
-                if results[0] > -1:
-                    rows.append(row)
-                else:
-                    print("skip race(中止)")
+                rows.append(row)
+                # if results[0] > -1:
+                #     rows.append(row)
+                # else:
+                #     print("skip race(中止)")
 
         with open(csvfilename, 'wt', encoding='utf-8') as w:
             writer = csv.writer(w)
 
             header = []
-            header += ["1st", "2nd", "3rd"]
+            header += ["result"]
             header += ["place", "placeid", "racenumber", ]
             header += ["number", "name", "age", "area", "weight", "rank", "win_all", "sec_all", "win_cur", "sec_cur", "motor_no", "motor_ratio", "boat_no", "boat_ratio"]
             header += ["r1", "r2", "r3", "r4", "r5", "r6"]
@@ -88,6 +95,8 @@ def convertFiles(files):
         convertFile(file)
 
 if __name__ == '__main__':
-    files = sorted(glob.glob('json/*.json'))
-    # files = ['json/m210525.json']
-    convertFiles(files)
+    if len(sys.argv) == 2:
+        convertFile(f"json/m{sys.argv[1]}.json", True)
+    else:
+        files = sorted(glob.glob('json/*.json'))
+        convertFiles(files)

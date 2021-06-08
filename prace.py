@@ -4,9 +4,7 @@ import re
 import os
 import json
 import sys
-
-def trimLine(line):
-    return re.sub('[ ]+', ' ', re.sub(r"[\u3000]", "", line)).split(' ')
+import util
 
 def parsePlayer(line):
     (number, id, name, age, area, weight, rank, win_all, sec_all, win_cur, sec_cur, motor_no, motor_ratio, boat_no, boat_ratio, season_result) = (
@@ -85,7 +83,7 @@ def parseRacelistFile(filename):
             if line:
                 if nt:
                     # タイトル取得(全角スペースを除去した後に連続する空白をまとめてから分割する)
-                    titleline = trimLine(line)
+                    titleline = util.trimLine(line)
                     place = titleline[0].replace('ボートレース', '')
                     # print(place)
                     nt = False
@@ -105,7 +103,7 @@ def parseRacelistFile(filename):
                     elif '---' in line:
                         lb += 1
                         if lb == 1:
-                            raceinfo = trimLine(prevLine)
+                            raceinfo = util.trimLine(prevLine)
                             racenumber = int(raceinfo[0].translate(raceinfo[0].maketrans(
                                 {chr(0xFF01 + i): chr(0x21 + i) for i in range(94)})).replace('R', ''))
                             # print(racenumber)
@@ -149,7 +147,7 @@ def parseResult(line):
         res["3rd"] = -1
         return res
 
-    tr = trimLine(line.strip())
+    tr = util.trimLine(line.strip())
     # print(tr)
 
     res["1st"] = int(tr[1][0:1])
@@ -170,12 +168,20 @@ def parseResult(line):
 
     return res
     
+def parserOrder(line, order):
+    tr = util.trimLine(line)
+    return {f'c{tr[2]}': tr[1]}
 
 def parseWin(line, place, racenumber, results):
-    tr = trimLine(line)
+    # print(line)
+    tr = util.trimLine(line)
     result = list(filter(lambda x: x['place'] == place and x['racenumber'] == racenumber, results))
     if len(result) > 0:
-        result[0]["win"] = int(tr[3])
+        if len(tr) > 3:
+            result[0]["win"] = int(tr[3])
+        else:
+            result[0]["win"] = 100  # 単勝が空白のケースがある。理由不明。
+
 
 def parseResultFile(filename):
     # print(filename)
@@ -195,11 +201,15 @@ def parseResultFile(filename):
     results = []
     result = {}
     racenumber = 0
+    inOrder = False
+    orders = {}
+    order = 0
     with open(filename, 'r') as f:
         while True:
             line = f.readline()
+            # print(line)
             if nt:
-                place = trimLine(line)[0]
+                place = util.trimLine(line)[0]
                 place = place[: place.rfind('［')]
                 # print(place)
                 racenumber = 1
@@ -218,6 +228,16 @@ def parseResultFile(filename):
                         rt = False
                 else:
                     print("同着スキップ")
+            elif inOrder:
+                orderResult = parserOrder(line, order)
+                # print(orderResult)
+                orders.update(orderResult)
+                order += 1
+                inOrder = order < 7
+                if not inOrder:
+                    result = list(filter(lambda x: x['place'] == place and x['racenumber'] == racenumber, results))
+                    if len(result) > 0:
+                        result[0].update(orders)
             elif line:
                 if 'BGN' in line:
                     nt = True
@@ -228,10 +248,13 @@ def parseResultFile(filename):
                     rn = 0
                 elif '不成立' in line:
                     racenumber = 1 if racenumber + 1 == 13 else racenumber + 1
-
                 elif '単勝' in line:
                     parseWin(line, place, racenumber, results)
                     racenumber = 1 if racenumber + 1 == 13 else racenumber + 1
+                elif '---' in line:
+                    inOrder = True
+                    orders = {}
+                    order = 1
                     
             else:
                 break

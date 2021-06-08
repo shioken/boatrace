@@ -184,7 +184,8 @@ def openfile(date):
     parseRacelistFile(filename, predictfile, pjsonfile)
 
 if __name__ == '__main__':
-    model = models.load_model('model/br_model.h5')
+    # model = models.load_model('model/br_model.h5')
+    model = models.load_model('model/br_model_0608.h5')
     # print(model.summary())
     if len(sys.argv) > 1:
         openfile(sys.argv[1])

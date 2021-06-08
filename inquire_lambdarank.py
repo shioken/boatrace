@@ -55,6 +55,7 @@ def inquire(target, minthreshold = 0.0, maxthreshold = 1.0):
                 order = (result["1st"], result["2nd"], result["3rd"],)
                 sorted_order = sorted(order)
                 if sorted_order[0] > 0:
+                    print(sorted_order)
                     total_race += 1
                     vline = f"{race['number']:2}R 3連単: {order[0]}-{order[1]}-{order[2]} 配当{result['tierce']:8,} / 3連複: {sorted_order[0]}-{sorted_order[1]}-{sorted_order[2]} 配当 {result['trio']:8,} / 単勝: {order[0]} 配当 {result['win']:6,}"
                     vline += " "
