@@ -41,7 +41,7 @@ def show_predictit(pname, area=""):
                         std = np.std(scores)
                         print(std)
                         vote = []
-                        if std > 0.7:
+                        if std > 0.55:
                             for i, racer in enumerate(sorted_racers):
                                 score = racer["score"]
                                 vote.append(racer["course"])

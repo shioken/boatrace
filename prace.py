@@ -173,14 +173,11 @@ def parserOrder(line, order):
     return {f'c{tr[2]}': tr[1]}
 
 def parseWin(line, place, racenumber, results):
-    # print(line)
     tr = util.trimLine(line)
+    print(place, racenumber, tr)
     result = list(filter(lambda x: x['place'] == place and x['racenumber'] == racenumber, results))
     if len(result) > 0:
-        if len(tr) > 3:
-            result[0]["win"] = int(tr[3])
-        else:
-            result[0]["win"] = 100  # 単勝が空白のケースがある。理由不明。
+        result[0]["win"] = int(tr[3])
 
 
 def parseResultFile(filename):
@@ -251,7 +248,7 @@ def parseResultFile(filename):
                     rt = True
                     rn = 0
                 elif '不成立' in line:
-                    if inr:
+                    if not inr:
                         racenumber = 1 if racenumber + 1 == 13 else racenumber + 1
                 elif '単勝' in line:
                     parseWin(line, place, racenumber, results)
