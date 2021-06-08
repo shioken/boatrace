@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 import glob
 import numpy as np
 
-files = sorted(glob.glob('csv/*.csv'), reverse=True)
+files = sorted(glob.glob('csv/*.csv'), reverse=True)[4:]
 csvs = []
 
 # 新しいものから1年分件取得する
@@ -16,8 +16,8 @@ for i, file in enumerate(files):
     csv = pd.read_csv(file)
     csvs.append(csv)
 
-    if i > 365 * 2:
-        break
+    # if i > 365 * 2:
+    #     break
 
 df = pd.concat(csvs)
 
