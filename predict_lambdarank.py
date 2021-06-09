@@ -77,7 +77,7 @@ def parsePlayer(line, place):
     return X
 
 
-def parseRacelistFile(filename, pfilename, jsonfile):
+def parseRacelistFile(filename, jsonfile):
     prevLine = ''
     nt = False
     place = ""
@@ -158,23 +158,25 @@ def parseRacelistFile(filename, pfilename, jsonfile):
             else:
                 break
 
-        with open(pfilename, 'w', encoding='utf-8') as pf:
-            pf.writelines(olines)
+        # with open(pfilename, 'w', encoding='utf-8') as pf:
+        #     pf.writelines(olines)
 
         with open(jsonfile, 'w', encoding='utf-8') as jf:
             json.dump(jroot, jf, ensure_ascii=False, indent=4)
-
+            print(f"out:{jsonfile}")
 
 def openfile(date):
     filename = f'racelist/b{date}.txt'
-    predictfile = f'predicted/l{date}.txt'
+    # predictfile = f'predicted/l{date}.txt'
     pjsonfile = f'predicted/l{date}.json'
     if not os.path.exists(filename):
         print(f"file '{filename} is not found")
         return
 
-    parseRacelistFile(filename, predictfile, pjsonfile)
+    global model
+    model = lgb.Booster(model_file='model/lambdarank.txt')
 
+    parseRacelistFile(filename, pjsonfile)
 
 if __name__ == '__main__':
     model = lgb.Booster(model_file='model/lambdarank.txt')

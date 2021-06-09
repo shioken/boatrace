@@ -17,9 +17,10 @@ def output_json(json):
             if 'vorewin' in race:
                 line += f'{race["votewin"]}'
 
-            print(line)
+            # print(line)
 
-def show_predictit(pname, area=""):
+def make_vote(pname, area=""):
+    print(pname)
     filepath = f'predicted/l{pname}.json'
     votepath = f'votes/lv{pname}.json'
     if os.path.exists(filepath):
@@ -29,39 +30,39 @@ def show_predictit(pname, area=""):
             all_votes = []
             for place in places:
                 if len(area) == 0 or area == place["name"]:
-                    print("------------------------------")
-                    print(place["name"])
-                    print("------------------------------")
+                    # print("------------------------------")
+                    # print(place["name"])
+                    # print("------------------------------")
                     votes = []
                     for race in place["races"]:
-                        print(race["number"], race["name"])
+                        # print(race["number"], race["name"])
                         racers = race["racers"]
                         sorted_racers = sorted(racers, key=lambda x: x["score"], reverse=True)
                         scores = list(map(lambda x: x["score"], racers))
                         std = np.std(scores)
-                        print(std)
+                        # print(std)
                         vote = []
                         if std > 0.55:
                             for i, racer in enumerate(sorted_racers):
                                 score = racer["score"]
                                 vote.append(racer["course"])
-                                print(racer["course"], racer["name"], f"{score:>8.6f}")
-                            print("")
+                                # print(racer["course"], racer["name"], f"{score:>8.6f}")
+                            # print("")
                             votes.append(vote)
                         else:
-                            print("skip this race")
+                            # print("skip this race")
                             votes.append(vote)
 
-                    print(place["name"])
                     jp = {}
                     jp["name"] = place["name"]
                     all_votes.append(jp)
                     jrs = []
                     jp["races"] = jrs
-                    for i in range(12):
+                    for i, vote in enumerate(votes):
                         jr = {}
                         jr["number"] = i + 1
                         jr["votes"] = []
+                        # print(i, votes)
                         if len(votes[i]) > 0:
                             jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][2]}")
                             jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][3]}")
@@ -73,8 +74,8 @@ def show_predictit(pname, area=""):
                         jrs.append(jr)
                     
             # print(json.dumps(all_votes, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': ')))
-            print("")
-            print("------------------------------")
+            # print("")
+            # print("------------------------------")
             output_json(all_votes)
 
             with open(votepath, 'w', encoding='utf-8') as vf:
@@ -85,8 +86,8 @@ def show_predictit(pname, area=""):
 
 if __name__ == '__main__':
     if len(sys.argv) == 3:
-        show_predictit(sys.argv[1], sys.argv[2])
+        make_vote(sys.argv[1], sys.argv[2])
     elif len(sys.argv) == 2:
-        show_predictit(sys.argv[1])
+        make_vote(sys.argv[1])
     else:
         print("ファイルを指定してください")

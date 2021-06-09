@@ -251,6 +251,10 @@ def parseResultFile(filename):
                 elif '不成立' in line:
                     if not inr:
                         racenumber = 1 if racenumber + 1 == 13 else racenumber + 1
+                    elif 'レース不成立' in line:
+                        racenumber = 1 if racenumber + 1 == 13 else racenumber + 1
+                    inr = True
+
                 elif '単勝' in line:
                     parseWin(line, place, racenumber, results)
                     racenumber = 1 if racenumber + 1 == 13 else racenumber + 1

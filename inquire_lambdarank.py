@@ -57,6 +57,8 @@ def inquire(target, minthreshold = 0.0, maxthreshold = 1.0):
                 sorted_order = sorted(order)
                 if sorted_order[0] > 0:
                     total_race += 1
+                    if not 'win' in result:
+                        print(target, result)
                     vline = f"{race['number']:2}R 3連単: {order[0]}-{order[1]}-{order[2]} 配当{result['tierce']:8,} / 3連複: {sorted_order[0]}-{sorted_order[1]}-{sorted_order[2]} 配当 {result['trio']:8,} / 単勝: {order[0]} 配当 {result['win']:6,}"
                     vline += " "
                     isRaceWin = [False, False]
@@ -133,6 +135,8 @@ def inquire(target, minthreshold = 0.0, maxthreshold = 1.0):
             print(f"3連単x1:{tierce_one_inquire / (total_bet_race * 100) * 100 :8.2f}%")
             print(f"3連複  :{trio_inquire / (total_bet_race * 4):8.2f}%")
             print(f"単勝   :{win_inquire / total_bet_race:>8.2f}%")
+
+        return (total_race, total_bet_race, total_bet, tierce_count, tierce_inquire, trio_count, trio_inquire, tierce_one_count, tierce_one_inquire, win_count, win_inquire)
 
 
 if __name__ == '__main__':
