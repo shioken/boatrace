@@ -174,10 +174,13 @@ def parserOrder(line, order):
 
 def parseWin(line, place, racenumber, results):
     tr = util.trimLine(line)
-    print(place, racenumber, tr)
+    # print(place, racenumber, tr)
     result = list(filter(lambda x: x['place'] == place and x['racenumber'] == racenumber, results))
     if len(result) > 0:
-        result[0]["win"] = int(tr[3])
+        if len(tr) >3:
+            result[0]["win"] = int(tr[3])
+        else:
+            result[0]["win"] = 100  # k160521 下関 3Rに単勝の払戻金が無い
 
 
 def parseResultFile(filename):
@@ -242,8 +245,6 @@ def parseResultFile(filename):
                 if 'BGN' in line:
                     nt = True
                     inr = True
-                # elif 'END' in line:
-                    # print('END')
                 elif '払戻金' in line:
                     rt = True
                     rn = 0
@@ -253,6 +254,7 @@ def parseResultFile(filename):
                 elif '単勝' in line:
                     parseWin(line, place, racenumber, results)
                     racenumber = 1 if racenumber + 1 == 13 else racenumber + 1
+                    inr = True
                 elif '---' in line:
                     inOrder = True
                     orders = {}
