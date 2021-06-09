@@ -16,6 +16,9 @@ def trimLine(line):
     return re.sub('[ ]+', ' ', re.sub(r"[\u3000]", "", line)).split(' ')
 
 def prediction(racers, lines, race):
+    global model
+    if model is None:
+        model = models.load_model('model/br_model_0608.h5')
     X = np.array(racers)
     mean = X.mean(axis=0)
     std = X.std(axis=0)
@@ -82,7 +85,7 @@ def parsePlayer(line):
 
     return X
 
-def parseRacelistFile(filename, pfilename, jsonfile):
+def parseRacelistFile(filename, jsonfile):
     prevLine = ''
     nt = False
     place = ""
@@ -164,8 +167,8 @@ def parseRacelistFile(filename, pfilename, jsonfile):
             else:
                 break
         
-        with open(pfilename, 'w', encoding='utf-8') as pf:
-            pf.writelines(olines)
+        # with open(pfilename, 'w', encoding='utf-8') as pf:
+        #     pf.writelines(olines)
 
         with open(jsonfile, 'w', encoding='utf-8') as jf:
             json.dump(jroot, jf, ensure_ascii = False, indent = 4)
@@ -175,17 +178,17 @@ def parseRacelistFile(filename, pfilename, jsonfile):
 
 def openfile(date):
     filename = f'racelist/b{date}.txt'
-    predictfile = f'predicted/p{date}.txt'
+    # predictfile = f'predicted/p{date}.txt'
     pjsonfile = f'predicted/p{date}.json'
     if not os.path.exists(filename):
         print(f"file '{filename} is not found")
         return
 
-    parseRacelistFile(filename, predictfile, pjsonfile)
+    parseRacelistFile(filename, pjsonfile)
 
 if __name__ == '__main__':
     # model = models.load_model('model/br_model.h5')
-    model = models.load_model('model/br_model_0608.h5')
+    # model = models.load_model('model/br_model_0608.h5')
     # print(model.summary())
     if len(sys.argv) > 1:
         openfile(sys.argv[1])

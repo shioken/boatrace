@@ -42,7 +42,7 @@ def make_vote(pname, area=""):
                         std = np.std(scores)
                         # print(std)
                         vote = []
-                        if std > 0.55:
+                        if std > 0.0:
                             for i, racer in enumerate(sorted_racers):
                                 score = racer["score"]
                                 vote.append(racer["course"])

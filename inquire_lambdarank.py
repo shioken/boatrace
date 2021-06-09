@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+inquireinquire#!/usr/bin/env python3
 import glob
 import re
 import os
@@ -39,15 +39,11 @@ def inquire(target, minthreshold = 0.0, maxthreshold = 1.0):
         tierce_inquire = 0
         trio_count = 0
         trio_inquire = 0
-        out_tierce_count = 0
-        out_trio_count = 0
         total_bet = 0
         total_race = 0
         total_bet_race = 0
         win_count = 0
         win_inquire = 0
-
-        total_all_bet = 0
 
         for place in vjson:
             print(place["name"])
@@ -104,14 +100,7 @@ def inquire(target, minthreshold = 0.0, maxthreshold = 1.0):
                             win_count += 1
                             win_inquire += result['win']
 
-                    if isRaceWin[0] is False:
-                        out_tierce_count += 1
-                    if isRaceWin[1] is False:
-                        out_trio_count += 1
-
                     print(vline)
-
-                    total_all_bet += result['tierce']
                 else:
                     print(f"{race['number']}R レース不成立")
 

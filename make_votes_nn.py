@@ -7,15 +7,15 @@ import sys
 
 def output_json(json):
     for place in json:
-        print(place["name"])
+        # print(place["name"])
         for race in place["races"]:
             line = f"{race['number']:2}R ({race['std']:>5.3f}) "
             for v in race['votes']:
                 line += f'{v} '
             line += f'{race["votewin"]}'
-            print(line)
+            # print(line)
 
-def show_predictit(pname, area=""):
+def make_vote(pname, area=""):
     filepath = f'predicted/p{pname}.json'
     votepath = f'votes/v{pname}.json'
     if os.path.exists(filepath):
@@ -49,7 +49,7 @@ def show_predictit(pname, area=""):
                     all_votes.append(jp)
                     jrs = []
                     jp["races"] = jrs
-                    for i in range(12):
+                    for i, vote in enumerate(votes):
                         jr = {}
                         jr["number"] = i + 1
                         jr["std"] = stds[i]
@@ -63,9 +63,9 @@ def show_predictit(pname, area=""):
                         jrs.append(jr)
                     
             # print(json.dumps(all_votes, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': ')))
-            print("")
-            print("------------------------------")
-            print(pname)
+            # print("")
+            # print("------------------------------")
+            # print(pname)
             output_json(all_votes)
 
             with open(votepath, 'w', encoding='utf-8') as vf:
@@ -76,8 +76,8 @@ def show_predictit(pname, area=""):
 
 if __name__ == '__main__':
     if len(sys.argv) == 3:
-        show_predictit(sys.argv[1], sys.argv[2])
+        make_vote(sys.argv[1], sys.argv[2])
     elif len(sys.argv) == 2:
-        show_predictit(sys.argv[1])
+        make_vote(sys.argv[1])
     else:
         print("ファイルを指定してください")

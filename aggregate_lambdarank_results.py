@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import predict_lambdarank as pl
-import make_vote_lambdarank as mvl
-import inquire_lambdarank   as il
+import make_votes_lambdarank as mvl
+import inquire_lambdarank as inquire
 import datetime
 import sys
 
@@ -28,21 +28,25 @@ def agreegate(target, days = 31):
 
         pl.openfile(target)
         mvl.make_vote(target)
-        (total_race, total_bet_race, total_bet, tierce_count, tierce_inquire, trio_count, trio_inquire, tierce_one_count, tierce_one_inquire, win_count, win_inquire) = il.inquire(target)
 
-        all_race_count += total_race
-        all_bet_race += total_bet_race
-        all_bet += total_bet
-        all_tierce_count += tierce_count
-        all_tierce_inquire += tierce_inquire
-        all_trio_count += trio_count
-        all_trio_inquire += trio_inquire
-        all_tierce_one_count += tierce_one_count
-        all_tierce_one_inquire += tierce_one_inquire
-        all_win_count += win_count
-        all_win_inquire += win_inquire
+        result = inquire.inquire(target)
+        if result:
+            (total_race, total_bet_race, total_bet, tierce_count, tierce_inquire, trio_count,
+             trio_inquire, tierce_one_count, tierce_one_inquire, win_count, win_inquire) = result
 
-        
+            all_race_count += total_race
+            all_bet_race += total_bet_race
+            all_bet += total_bet
+            all_tierce_count += tierce_count
+            all_tierce_inquire += tierce_inquire
+            all_trio_count += trio_count
+            all_trio_inquire += trio_inquire
+            all_tierce_one_count += tierce_one_count
+            all_tierce_one_inquire += tierce_one_inquire
+            all_win_count += win_count
+            all_win_inquire += win_inquire
+
+            
         date = date + datetime.timedelta(days=1)
         dur += 1
     
