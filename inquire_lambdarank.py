@@ -1,4 +1,4 @@
-inquireinquire#!/usr/bin/env python3
+#!/usr/bin/env python3
 import glob
 import re
 import os
@@ -19,11 +19,11 @@ def inquire(target, minthreshold = 0.0, maxthreshold = 1.0):
     
     if not os.path.exists(votefile):
         print(f'{votefile} is not exists')
-        return
+        return None
     
     if not os.path.exists(resultfile):
         print(f'{resultfile} is not exists')
-        return
+        return None
 
     year = 2000 + int(target[:2])
     month = int(target[2:4])
