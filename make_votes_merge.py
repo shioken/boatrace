@@ -8,7 +8,7 @@ import numpy as np
 
 def output_json(json):
     for place in json:
-        # print(place["name"])
+        print(place["name"])
         for race in place["races"]:
             line = f"{race['number']:2}R "
             for v in race['votes']:
@@ -20,8 +20,9 @@ def output_json(json):
             # print(line)
 
 def make_vote(pname, area=""):
-    filepath = f'predicted/l{pname}.json'
-    votepath = f'votes/lv{pname}.json'
+    print(pname)
+    filepath = f'predicted/m{pname}.json'
+    votepath = f'votes/mv{pname}.json'
     if os.path.exists(filepath):
         with open(filepath, 'r', encoding='utf-8') as f:
             data = json.load(f)
@@ -79,7 +80,6 @@ def make_vote(pname, area=""):
 
             with open(votepath, 'w', encoding='utf-8') as vf:
                 json.dump(all_votes, vf, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
-                print(f"out: {votepath}")
 
     else:
         print(f'{filepath} dose not exists.')
