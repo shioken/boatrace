@@ -21,7 +21,7 @@ def output_json(json):
 
 def make_vote(pname, area=""):
     filepath = f'predicted/l{pname}.json'
-    votepath = f'votes/lv{pname}.json'
+    votepath = f'votes/l{pname}.json'
     if os.path.exists(filepath):
         with open(filepath, 'r', encoding='utf-8') as f:
             data = json.load(f)

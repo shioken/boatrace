@@ -9,7 +9,7 @@ def norm_scores(scores):
     return list(map(lambda x: (x - min(scores)) / (max(scores) - min(scores)), scores))
 
 def mergePrediction(date):
-    nnfile = f"predicted/p{date}.json"
+    nnfile = f"predicted/n{date}.json"
     lmfile = f"predicted/l{date}.json"
 
     if not os.path.exists(nnfile):

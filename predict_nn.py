@@ -34,6 +34,8 @@ def prediction(racers, lines, race):
     race["mean"] = float(mean)
     race["std"] = float(std)
 
+    norm_scores = list(map(lambda x: (x - min(predictions)) / (max(predictions) - min(predictions)), predictions))
+
     lines.append('\n')
     lines.append("sum:{2:>.5f} mean:{0:>.5f} std:{1:>.5f}\n".format(mean, std, sum))
     for i, pr in enumerate(predictions):
@@ -43,7 +45,7 @@ def prediction(racers, lines, race):
         lines.append("{2} {0:>8.3f}% {1:>8.3f}\n".format(pr[0] * 100, deviation_value, i + 1))
 
         racer = race["racers"][i]
-        racer["score"] = float(pr[0])
+        racer["score"] = float(norm_scores[i])
         racer["deviation"] = float(deviation)
 
 RANKMAP = {
@@ -172,14 +174,15 @@ def parseRacelistFile(filename, jsonfile):
 
         with open(jsonfile, 'w', encoding='utf-8') as jf:
             json.dump(jroot, jf, ensure_ascii = False, indent = 4)
-        
+            print(f"out: {jsonfile}")
+
 
 
 
 def openfile(date):
     filename = f'racelist/b{date}.txt'
     # predictfile = f'predicted/p{date}.txt'
-    pjsonfile = f'predicted/p{date}.json'
+    pjsonfile = f'predicted/n{date}.json'
     if not os.path.exists(filename):
         print(f"file '{filename} is not found")
         return

@@ -23,11 +23,11 @@ def prediction(racers, lines, race):
     predictions = model.predict(
         X, num_iteration=model.best_iteration)
 
-    for i, pr in enumerate(predictions):
-        # print(f"{(i + 1)} {pr:>10.8f}")
+    norm_scores = list(map(lambda x: (x - min(predictions)) / (max(predictions) - min(predictions)), predictions))
 
+    for i, pr in enumerate(predictions):
         racer = race["racers"][i]
-        racer["score"] = float(pr)
+        racer["score"] = float(norm_scores[i])
 
 
 RANKMAP = {
@@ -163,7 +163,7 @@ def parseRacelistFile(filename, jsonfile):
 
         with open(jsonfile, 'w', encoding='utf-8') as jf:
             json.dump(jroot, jf, ensure_ascii=False, indent=4)
-            print(f"out:{jsonfile}")
+            print(f"out: {jsonfile}")
 
 def openfile(date):
     filename = f'racelist/b{date}.txt'
