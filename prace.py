@@ -4,7 +4,8 @@ import re
 import os
 import json
 import sys
-import util
+import utils
+import datetime
 
 def parsePlayer(line):
     (number, id, name, age, area, weight, rank, win_all, sec_all, win_cur, sec_cur, motor_no, motor_ratio, boat_no, boat_ratio, season_result) = (
@@ -83,7 +84,7 @@ def parseRacelistFile(filename):
             if line:
                 if nt:
                     # タイトル取得(全角スペースを除去した後に連続する空白をまとめてから分割する)
-                    titleline = util.trimLine(line)
+                    titleline = utils.trimLine(line)
                     place = titleline[0].replace('ボートレース', '')
                     # print(place)
                     nt = False
@@ -103,7 +104,7 @@ def parseRacelistFile(filename):
                     elif '---' in line:
                         lb += 1
                         if lb == 1:
-                            raceinfo = util.trimLine(prevLine)
+                            raceinfo = utils.trimLine(prevLine)
                             racenumber = int(raceinfo[0].translate(raceinfo[0].maketrans(
                                 {chr(0xFF01 + i): chr(0x21 + i) for i in range(94)})).replace('R', ''))
                             # print(racenumber)
@@ -147,7 +148,7 @@ def parseResult(line):
         res["3rd"] = -1
         return res
 
-    tr = util.trimLine(line.strip())
+    tr = utils.trimLine(line.strip())
     # print(tr)
 
     res["1st"] = int(tr[1][0:1])
@@ -169,11 +170,11 @@ def parseResult(line):
     return res
     
 def parserOrder(line, order):
-    tr = util.trimLine(line)
+    tr = utils.trimLine(line)
     return {f'c{tr[2]}': tr[1]}
 
 def parseWin(line, place, racenumber, results):
-    tr = util.trimLine(line)
+    tr = utils.trimLine(line)
     # print(place, racenumber, tr)
     result = list(filter(lambda x: x['place'] == place and x['racenumber'] == racenumber, results))
     if len(result) > 0:
@@ -210,7 +211,7 @@ def parseResultFile(filename):
             line = f.readline()
             # print(line)
             if nt:
-                place = util.trimLine(line)[0]
+                place = utils.trimLine(line)[0]
                 place = place[: place.rfind('［')]
                 # print(place)
                 racenumber = 1
@@ -325,9 +326,18 @@ def parseFiles(kfiles, force=False):
             print(f"result file {bfile} is not exists")
 
 
+def parseFile(date):
+    parseFiles([f"result/k{date}.txt"], True)
+
 if __name__ == '__main__':
     if len(sys.argv) == 2:
-        parseFiles([f"result/k{sys.argv[1]}.txt"], True)
+        date = sys.argv[1]
+        if sys.argv[1] == 'today':
+            date = utils.getStringToday()
+        elif sys.argv[1] == 'yesterday':
+            date = utils.getStringYesterday()
+
+        parseFile(date)
     else:
         resultfiles = sorted(glob.glob('result/k*.txt'))
         # resultfiles = ['result/k210525.txt']

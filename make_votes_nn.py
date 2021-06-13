@@ -39,7 +39,7 @@ def make_vote(pname, area=""):
                         for i, racer in enumerate(sorted_racers):
                             score = racer["score"]
                             vote.append(racer["course"])
-                            print(racer["course"], racer["name"], f"{score * 100:>8.3f}%", f"{1 / score:>8.3f}")
+                            print(racer["course"], racer["name"], f"{score * 100:>8.3f}%")
                         print("")
                         votes.append(vote)
                     

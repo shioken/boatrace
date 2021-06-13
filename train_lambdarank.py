@@ -7,7 +7,10 @@ from sklearn.model_selection import train_test_split
 import glob
 import numpy as np
 
-files = sorted(glob.glob('csv/*.csv'), reverse=True)[4:]
+files_2020 = glob.glob('csv/m20*.csv')
+files_2019 = glob.glob('csv/m19*.csv')
+files = files_2019 + files_2020
+# files = sorted(glob.glob('csv/*.csv'), reverse=True)[4:]
 csvs = []
 
 # 新しいものから1年分件取得する

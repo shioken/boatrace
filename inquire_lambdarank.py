@@ -14,7 +14,7 @@ def search_result(result, place, number):
 
 def inquire(target, minthreshold = 0.0, maxthreshold = 1.0):
 
-    votefile = f'votes/lv{target}.json'
+    votefile = f'votes/l{target}.json'
     resultfile = f'json/m{target}.json'
     
     if not os.path.exists(votefile):

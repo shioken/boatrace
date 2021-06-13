@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 import sys
 import lhafile
 import subprocess
+import utils
 
 target_url = 'http://www1.mbrace.or.jp/od2/'
 

@@ -9,7 +9,7 @@ import numpy as np
 import os
 import json
 import sys
-import util
+import utils
 import re
 
 # with open('model/lambdarank.txt', 'r', encoding='utf-8') as lr:
@@ -103,7 +103,7 @@ def parseRacelistFile(filename, jsonfile):
                 if nt:
                     olines.append(line)
                     olines.append('\n')
-                    place = util.trimLine(line)[0].replace('ボートレース', '')
+                    place = utils.trimLine(line)[0].replace('ボートレース', '')
                     curplace = {}
                     curplace["name"] = place
                     races = []

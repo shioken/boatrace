@@ -24,7 +24,7 @@ def make_vote(pname, type):
         print("type not found. nn   or lm")
         return
 
-    prefix = 'p' if type == 'nn' else 'l'
+    prefix = 'n' if type == 'nn' else 'l'
     out_predix = 'n' if type == 'nn' else 'l'
     filepath = f'predicted/{prefix}{pname}.json'
     votepath = f'votes/{out_predix}{pname}.json'
