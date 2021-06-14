@@ -291,12 +291,13 @@ def mergeRaceAndResult(races, results):
                 break
         
         if not "result" in race:
-            print("not result", race["place"], race["racenumber"])
+            # print("not result", race["place"], race["racenumber"])
             emptyraces.append(race)
             # return False
-    
-    for race in emptyraces:
-        races.remove(race)
+
+    # 結果のないレースも保存する    
+    # for race in emptyraces:
+        # races.remove(race)
 
     return True
 
