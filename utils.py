@@ -18,6 +18,11 @@ def placeid(place):
         return places[place]
     return 0
 
+def rankmap(rank):
+    if rank in RANKMAP:
+        return RANKMAP[rank]
+    return [0.0, 0.0, 0.0, 0.0]
+
 def trimLine(line):
     return re.sub('[ ]+', ' ', re.sub(r"[\u3000]", "", line)).split(' ')
 

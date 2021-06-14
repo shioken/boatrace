@@ -88,9 +88,9 @@ def makeX(racer, place, prefix):
 
     season_result = ''.join(season_result)
 
-    placeid = places[place]
+    placeid = utils.placeid(place)
 
-    rank_val = RANKMAP[rank]
+    rank_val = utils.rankmap(rank)
 
     if prefix == 'n':
         X = [float(number), float(weight), win_all, sec_all,
