@@ -45,7 +45,8 @@ def prediction(racers, lines, race):
         lines.append("{2} {0:>8.3f}% {1:>8.3f}\n".format(pr[0] * 100, deviation_value, i + 1))
 
         racer = race["racers"][i]
-        racer["score"] = float(norm_scores[i])
+        racer["norm_score"] = float(norm_scores[i])
+        racer["score"] = float(pr)
         racer["deviation"] = float(deviation)
 
 RANKMAP = {
@@ -84,7 +85,7 @@ def parsePlayer(line):
     #     X += [float(season_result[i: i + 1])]
         
     X += rank_val
-
+    print(len(X), X)
     return X
 
 def parseRacelistFile(filename, jsonfile):

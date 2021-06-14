@@ -1,29 +1,68 @@
 #!/usr/bin/env python3
-
-import pandas as pd
-import lightgbm as lgb
-from sklearn import datasets
-from sklearn.model_selection import train_test_split
 import glob
-import numpy as np
+import re
 import os
 import json
 import sys
-import utils
-import re
+import pandas as pd
+from sklearn.model_selection import train_test_split
+import keras
+from keras import models, layers, regularizers
+import numpy as np
+import lightgbm as lgb
 
-# with open('model/lambdarank.txt', 'r', encoding='utf-8') as lr:
-#     model_txt = lr.read()
+model_nn = None
+model_lm = None
 
-model = None    
+def trimLine(line):
+    return re.sub('[ ]+', ' ', re.sub(r"[\u3000]", "", line)).split(' ')
 
-
-def prediction(racers, lines, race):
+def prediction_nn(racers, lines, race):
+    global model_nn
+    if model_nn is None:
+        model_nn = models.load_model('model/br_model_0608.h5')
     X = np.array(racers)
-    predictions = model.predict(
-        X, num_iteration=model.best_iteration)
+    mean = X.mean(axis=0)
+    std = X.std(axis=0)
+    X -= mean
+    X /= std
+    X = np.nan_to_num(X)
+    predictions = model_nn.predict(X)
+    sum = predictions.sum()
+    mean = predictions.mean()
+    std = predictions.std()
+
+    race["sum"] = float(sum)
+    race["mean"] = float(mean)
+    race["std"] = float(std)
 
     norm_scores = list(map(lambda x: (x - min(predictions)) / (max(predictions) - min(predictions)), predictions))
+
+    lines.append('\n')
+    lines.append("sum:{2:>.5f} mean:{0:>.5f} std:{1:>.5f}\n".format(mean, std, sum))
+    for i, pr in enumerate(predictions):
+        deviation = (pr[0] - mean) / std
+        deviation_value = deviation * 10 + 50
+        # print((i + 1), "{0:>8.3f}% {1:>8.3f}".format(pr[0] * 100, deviation_value))
+        lines.append("{2} {0:>8.3f}% {1:>8.3f}\n".format(pr[0] * 100, deviation_value, i + 1))
+
+        racer = race["racers"][i]
+        racer["norm_score"] = float(norm_scores[i])
+        racer["score"] = float(pr)
+        racer["deviation"] = float(deviation)
+
+
+def prediction_lm(racers, lines, race):
+    global model_lm
+    if model_lm is None:
+        model_lm = lgb.Booster(model_file='model/lambdarank.txt')
+
+    X = np.array(racers)
+    predictions = model_lm.predict(
+        X, num_iteration=model_lm.best_iteration)
+
+    norm_scores = list(map(lambda x: (x - min(predictions)) /
+                       (max(predictions) - min(predictions)), predictions))
 
     for i, pr in enumerate(predictions):
         racer = race["racers"][i]
@@ -41,8 +80,7 @@ RANKMAP = {
 places = {'桐生': 1, '戸田': 2, '江戸川': 3, '平和島': 4, '多摩川': 5, '浜名湖': 6, '蒲郡': 7,
           '常滑': 8, '津': 9, '三国': 10, 'びわこ': 11, '琵琶湖': 11, '住之江': 12, '尼崎': 13, '鳴門': 14, '丸亀': 15, '児島': 16, '宮島': 17, '徳山': 18, '下関': 19, '若松': 20, '芦屋': 21, '福岡': 22, '唐津': 23, '大村': 24, }
 
-
-def parsePlayer(line, place):
+def parsePlayer(line, place, prefix):
     (number, id, name, age, area, weight, rank, win_all, sec_all, win_cur, sec_cur, motor_no, motor_ratio, boat_no, boat_ratio, season_result) = (
         float(line[:1]),
         line[2:6],
@@ -66,19 +104,18 @@ def parsePlayer(line, place):
 
     rank_val = RANKMAP[rank]
 
-    X = [float(placeid), float(number), float(weight), win_all, sec_all,
-         win_cur, sec_cur, motor_ratio, boat_ratio]
-
-    season_result = re.sub(r"[ FLSK]", "0", season_result)
-    for i in range(6):
-        X += [float(season_result[i: i + 1])]
-
+    if prefix == 'n':
+        X = [float(number), float(weight), win_all, sec_all, win_cur, sec_cur, motor_ratio, boat_ratio]
+    else:
+        X = [float(placeid), float(number), float(weight), win_all, sec_all, win_cur, sec_cur, motor_ratio, boat_ratio]
+        season_result = re.sub(r"[ FLSK]", "0", season_result)
+        for i in range(6):
+            X += [float(season_result[i: i + 1])]
+        
     X += rank_val
-
     return X
 
-
-def parseRacelistFile(filename, jsonfile):
+def parseRacelistFile(filename, jsonfile, prefix):
     prevLine = ''
     nt = False
     place = ""
@@ -104,7 +141,7 @@ def parseRacelistFile(filename, jsonfile):
                 if nt:
                     olines.append(line)
                     olines.append('\n')
-                    place = utils.trimLine(line)[0].replace('ボートレース', '')
+                    place = trimLine(line)[0].replace('ボートレース', '')
                     curplace = {}
                     curplace["name"] = place
                     races = []
@@ -116,7 +153,7 @@ def parseRacelistFile(filename, jsonfile):
                     sl = line.strip()
                     olines.append(sl)
                     olines.append('\n')
-                    racer = parsePlayer(line, place)
+                    racer = parsePlayer(line, place, prefix)
                     pcount += 1
                     racers.append(racer)
                     jracer = {}
@@ -124,7 +161,10 @@ def parseRacelistFile(filename, jsonfile):
                     jracer["course"] = pcount
                     currace["racers"].append(jracer)
                     if pcount == 6:
-                        prediction(racers, olines, currace)
+                        if prefix == 'n':
+                            prediction_nn(racers, olines, currace)
+                        else:
+                            prediction_lm(racers, olines, currace)
                         pline = False
                         olines.append('\n')
                 else:
@@ -149,6 +189,7 @@ def parseRacelistFile(filename, jsonfile):
                             races.append(currace)
                             currace["racers"] = []
 
+                            
                         else:
                             # 次の行から選手が出てくる
                             lb = 0
@@ -158,28 +199,29 @@ def parseRacelistFile(filename, jsonfile):
                 prevLine = line
             else:
                 break
-
+        
         # with open(pfilename, 'w', encoding='utf-8') as pf:
         #     pf.writelines(olines)
 
         with open(jsonfile, 'w', encoding='utf-8') as jf:
-            json.dump(jroot, jf, ensure_ascii=False, indent=4)
+            json.dump(jroot, jf, ensure_ascii = False, indent = 4)
             print(f"out: {jsonfile}")
 
-def openfile(date):
+
+
+
+def openfile(date, type):
     filename = f'racelist/b{date}.txt'
-    # predictfile = f'predicted/l{date}.txt'
-    pjsonfile = f'predicted/l{date}.json'
+    prefix = 'n' if type == 'nn' else 'l'
+    pjsonfile = f'predicted/{prefix}{date}.json'
     if not os.path.exists(filename):
         print(f"file '{filename} is not found")
         return
 
-    global model
-    model = lgb.Booster(model_file='model/lambdarank.txt')
-
-    parseRacelistFile(filename, pjsonfile)
+    parseRacelistFile(filename, pjsonfile, prefix)
 
 if __name__ == '__main__':
-    model = lgb.Booster(model_file='model/lambdarank.txt')
-    if len(sys.argv) > 1:
-        openfile(sys.argv[1])
+    if len(sys.argv) == 3:
+        openfile(sys.argv[1], sys.argv[2])
+    else:
+        print("predict.py date type([nn|lm])")
