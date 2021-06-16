@@ -157,7 +157,18 @@ def prediction(date, type):
             print(f"out: {predictfile}")
 
 if __name__ == '__main__':
+    date = ""
+    if len(sys.argv) > 1:
+        date = sys.argv[1]
+        if date == 'today':
+            date = utils.getStringToday()
+        elif date == 'yesterday':
+            date = utils.getStringYesterday()
+
     if len(sys.argv) == 3:
-        prediction(sys.argv[1], sys.argv[2])
+        prediction(date, sys.argv[2])
+    elif len(sys.argv) == 2:
+        prediction(date, 'nn')
+        prediction(date, 'lm')
     else:
         print("predict.py date type([nn|lm])")

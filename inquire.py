@@ -135,7 +135,18 @@ def inquire(target, type):
 
 
 if __name__ == '__main__':
+    date = ""
+    if len(sys.argv) > 1:
+        date = sys.argv[1]
+        if date == 'today':
+            date = utils.getStringToday()
+        elif date == 'yesterday':
+            date = utils.getStringYesterday()
+
     if len(sys.argv) == 3:
-        inquire(sys.argv[1],sys.argv[2])
+        inquire(date, sys.argv[2])
+    elif len(sys.argv) == 2:
+        inquire(date, 'nn')
+        inquire(date, 'lm')
     else:
         print("Please specify a file.")

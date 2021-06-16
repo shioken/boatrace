@@ -5,6 +5,7 @@ import os
 import json
 import sys
 import numpy as np
+import utils
 
 def output_json(json):
     for place in json:
@@ -90,7 +91,18 @@ def make_vote(pname, type):
         print(f'{filepath} dose not exists.')
 
 if __name__ == '__main__':
+    date = ""
+    if len(sys.argv) > 1:
+        date = sys.argv[1]
+        if date == 'today':
+            date = utils.getStringToday()
+        elif date == 'yesterday':
+            date = utils.getStringYesterday()
+
     if len(sys.argv) == 3:
-        make_vote(sys.argv[1], sys.argv[2])
+        make_vote(date, sys.argv[2])
+    elif len(sys.argv) == 2:
+        make_vote(date, 'nn')
+        make_vote(date, 'lm')
     else:
         print("make_votes.py date type(nn/lm)")
