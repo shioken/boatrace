@@ -4,6 +4,7 @@ import re
 import os
 import json
 import sys
+import utils
 
 def search_result(result, place, number):
     for race in result:
@@ -116,10 +117,10 @@ def inquire(target, type):
         print(f"{year}/{month:02}/{day:02}")
         if total_bet > 0 and total_race > 0:
             print(f"レース数:{total_race} 参加レース数: {total_bet_race} 単勝: {total_bet_win_race} 3連単x4: {total_bet:>8,}")
-            print(f"3連単x4({tierce_count:2}):{tierce_inquire:8,}({tierce_inquire - total_bet:>8,})")
-            print(f"3連単x1({tierce_one_count:2}):{tierce_one_inquire:8,}({tierce_one_inquire - total_bet_race * 100:>8,})")
-            print(f"3連複  ({trio_count:2}):{trio_inquire:8,}({trio_inquire - total_bet:>8,})")
-            print(f"単勝   ({win_count:2}):{win_inquire:8,}({win_inquire - total_bet_win_race * 100:>8,})")
+            print(f"3連単x4({tierce_count:3}):{tierce_inquire:8,}({tierce_inquire - total_bet:>8,})")
+            print(f"3連単x1({tierce_one_count:3}):{tierce_one_inquire:8,}({tierce_one_inquire - total_bet_race * 100:>8,})")
+            print(f"3連複  ({trio_count:3}):{trio_inquire:8,}({trio_inquire - total_bet:>8,})")
+            print(f"単勝   ({win_count:3}):{win_inquire:8,}({win_inquire - total_bet_win_race * 100:>8,})")
             print(f"\n当選率")
             print(f"3連単x4:{tierce_count / total_bet_race * 100:8.2f}%")
             print(f"3連単x1:{tierce_one_count / total_bet_race * 100:8.2f}%")
