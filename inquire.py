@@ -9,7 +9,10 @@ import utils
 def search_result(result, place, number):
     for race in result:
         if race["place"] == place and race["racenumber"] == number:
-            return race["result"]
+            if 'result' in race:
+                return race["result"]
+            else:
+                return None
 
     return None
 
@@ -53,6 +56,10 @@ def inquire(target, type):
             print(place["name"])
             for race in place["races"]:
                 result = search_result(rjson, place["name"], race["number"])
+                if result is None:
+                    print(f"{race['number']:2}R 結果なし")
+                    continue
+
                 order = (result["1st"], result["2nd"], result["3rd"],)
                 sorted_order = sorted(order)
                 if sorted_order[0] > 0:
