@@ -45,6 +45,8 @@ def inquire(target, type):
         tierce_inquire = 0
         trio_count = 0
         trio_inquire = 0
+        trio_one_count = 0
+        trio_one_inquire = 0
         total_bet = 0
         total_race = 0
         total_bet_race = 0
@@ -92,6 +94,8 @@ def inquire(target, type):
                             if no == 0:
                                 tierce_one_count += 1
                                 tierce_one_inquire += result['tierce']
+                                trio_one_count += 1
+                                trio_one_inquire += result['trio']
 
                             isRaceWin[0] = True
                             isRaceWin[1] = True
@@ -100,6 +104,10 @@ def inquire(target, type):
 
                             trio_count += 1
                             trio_inquire += result['trio']
+
+                            if no == 1:
+                                trio_one_count += 1
+                                trio_one_inquire += result['trio']
 
                             isRaceWin[1] = True
                         else:
@@ -123,20 +131,23 @@ def inquire(target, type):
         print("")
         print(f"{year}/{month:02}/{day:02}")
         if total_bet > 0 and total_race > 0:
-            print(f"レース数:{total_race} 参加レース数: {total_bet_race} 単勝: {total_bet_win_race} 3連単x4: {total_bet:>8,}")
+            print(f"レース数:{total_race} 参加レース数: {total_bet_race} 単勝/3連単x1/3連複x1: {total_bet_win_race} 3連単x4: {total_bet:>8,}")
             print(f"3連単x4({tierce_count:3}):{tierce_inquire:8,}({tierce_inquire - total_bet:>8,})")
+            print(f"3連複x4({trio_count:3}):{trio_inquire:8,}({trio_inquire - total_bet:>8,})")
             print(f"3連単x1({tierce_one_count:3}):{tierce_one_inquire:8,}({tierce_one_inquire - total_bet_race * 100:>8,})")
-            print(f"3連複  ({trio_count:3}):{trio_inquire:8,}({trio_inquire - total_bet:>8,})")
+            print(f"3連複x1({trio_one_count:3}):{trio_one_inquire:8,}({trio_one_inquire - total_bet_race * 100:>8,})")
             print(f"単勝   ({win_count:3}):{win_inquire:8,}({win_inquire - total_bet_win_race * 100:>8,})")
             print(f"\n当選率")
             print(f"3連単x4:{tierce_count / total_bet_race * 100:8.2f}%")
+            print(f"3連複x4:{trio_count / total_bet_race * 100:8.2f}%")
             print(f"3連単x1:{tierce_one_count / total_bet_race * 100:8.2f}%")
-            print(f"3連複  :{trio_count / total_bet_race * 100:8.2f}%")
+            print(f"3連複x1:{trio_one_count / total_bet_race * 100:8.2f}%")
             print(f"単勝   :{win_count / total_bet_win_race * 100:8.2f}%")
             print(f"\n回収率")
             print(f"3連単x4:{tierce_inquire / total_bet * 100:8.2f}%")
+            print(f"3連複x4:{trio_inquire / (total_bet_race * 4):8.2f}%")
             print(f"3連単x1:{tierce_one_inquire / (total_bet_race * 100) * 100 :8.2f}%")
-            print(f"3連複  :{trio_inquire / (total_bet_race * 4):8.2f}%")
+            print(f"3連複x1:{trio_one_inquire / (total_bet_race * 100) * 100 :8.2f}%")
             print(f"単勝   :{win_inquire / total_bet_win_race:>8.2f}%")
 
         return (total_race, total_bet_race, total_bet, tierce_count, tierce_inquire, trio_count, trio_inquire, tierce_one_count, tierce_one_inquire, win_count, win_inquire)
