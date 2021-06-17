@@ -9,7 +9,8 @@ import numpy as np
 
 files_2020 = glob.glob('csv/m20*.csv')
 files_2019 = glob.glob('csv/m19*.csv')
-files = files_2019 + files_2020
+files_2018 = glob.glob('csv/m18*.csv')
+files = files_2018 + files_2019 + files_2020
 # files = sorted(glob.glob('csv/*.csv'), reverse=True)[4:]
 csvs = []
 
@@ -41,7 +42,7 @@ for placeid, number in zip(df["placeid"], df["racenumber"]):
     else:
         queries[index] += 1
 
-df = df.drop(["place", "racenumber", "area", "name", "age", "motor_no", "boat_no"], axis=1)
+df = df.drop(["place", "placeid", "racenumber", "area", "name", "age", "motor_no", "boat_no"], axis=1)
 
 ranks = ["A1", "A2", "B1", "B2"]
 for rank in ranks:

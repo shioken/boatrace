@@ -95,7 +95,7 @@ def makeX(racer, place, prefix):
         X = [float(number), float(weight), win_all, sec_all,
              win_cur, sec_cur, motor_ratio, boat_ratio]
     else:
-        X = [float(placeid), float(number), float(weight), win_all,
+        X = [float(number), float(weight), win_all,
              sec_all, win_cur, sec_cur, motor_ratio, boat_ratio]
         season_result = re.sub(r"[ FLSK]", "0", season_result)
         for i in range(6):
