@@ -30,24 +30,16 @@ def prediction_nn(racers, race):
     mean = predictions.mean()
     std = predictions.std()
 
-    race["sum"] = float(sum)
     race["mean"] = float(mean)
     race["std"] = float(std)
 
     norm_scores = list(map(lambda x: (x - min(predictions)) / (max(predictions) - min(predictions)), predictions))
 
-    # lines.append('\n')
-    # lines.append("sum:{2:>.5f} mean:{0:>.5f} std:{1:>.5f}\n".format(mean, std, sum))
     for i, pr in enumerate(predictions):
-        deviation = (pr[0] - mean) / std
-        deviation_value = deviation * 10 + 50
-        # print((i + 1), "{0:>8.3f}% {1:>8.3f}".format(pr[0] * 100, deviation_value))
-        # lines.append("{2} {0:>8.3f}% {1:>8.3f}\n".format(pr[0] * 100, deviation_value, i + 1))
-
         racer = race["racers"][i]
         racer["norm_score"] = float(norm_scores[i])
         racer["score"] = float(pr)
-        racer["deviation"] = float(deviation)
+        racer["deviation"] = float((pr[0] - mean) / std * 10 + 50)
 
 
 def prediction_lm(racers, race):
@@ -59,6 +51,12 @@ def prediction_lm(racers, race):
     predictions = model_lm.predict(
         X, num_iteration=model_lm.best_iteration)
 
+    std = np.std(predictions)
+    mean = np.mean(predictions)
+
+    race["mean"] = float(mean)
+    race["std"] = float(std)
+
     norm_scores = list(map(lambda x: (x - min(predictions)) /
                        (max(predictions) - min(predictions)), predictions))
 
@@ -66,6 +64,7 @@ def prediction_lm(racers, race):
         racer = race["racers"][i]
         racer["norm_score"] = float(norm_scores[i])
         racer["score"] = float(pr)
+        racer["deviation"] = float((pr - mean) / std * 10 + 50)
 
 def makeX(racer, place, prefix):
     (number, name, age, area, weight, rank, win_all, sec_all, win_cur, sec_cur, motor_no, motor_ratio, boat_no, boat_ratio, season_result) = (
