@@ -7,6 +7,14 @@ import json
 import matplotlib as mlp
 import matplotlib.pyplot as plt
 
+rjson = []
+
+def findRace(place, number):
+    for race in rjson:
+        if race['place'] == place and race['racenumber'] == number:
+            return race
+    return None
+
 def draw_scatter(date, type):
     if not re.match("nn|lm", type):
         print("type not found. nn   or lm")
@@ -24,10 +32,29 @@ def draw_scatter(date, type):
         print(f"{rfile} is not exists.")
         return
 
+    global rjson
     with open(pfile, 'r', encoding='utf-8') as pf, open(rfile, 'r', encoding='utf-8') as rf:
         pjson = json.load(pf)
         rjson = json.load(rf)
-        
+
+        deviations = []
+        inquires = []
+        for place in pjson['places']:
+            for race in place['races']:
+                raceresult = findRace(place['name'], race['number'])
+                if raceresult and 'result' in raceresult:
+                    result = raceresult['result']
+                    winner = result['1st']
+                    odds = result['win']
+                    deviation = race['racers'][winner - 1]['deviation']
+                    deviations.append(deviation)
+                    inquires.append(odds)
+
+        fig = plt.figure()
+        plt.scatter(deviations, inquires)
+        plt.show()
+                    
+
 if __name__ == '__main__':
     date = ""
     if len(sys.argv) > 1:
