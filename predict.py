@@ -94,6 +94,7 @@ def makeX(racer, place, prefix):
     if prefix == 'n':
         X = [float(number), float(weight), win_all, sec_all,
              win_cur, sec_cur, motor_ratio, boat_ratio]
+        X += rank_val
     else:
         X = [float(number), float(weight), win_all,
              sec_all, win_cur, sec_cur, motor_ratio, boat_ratio]
@@ -101,7 +102,10 @@ def makeX(racer, place, prefix):
         for i in range(6):
             X += [float(season_result[i: i + 1])]
 
-    X += rank_val
+        # convert rank to categorical value
+        ranks = ["A1", "A2", "B1", "B2"]
+        X += [ranks.index(rank)]
+
     return X
 
 

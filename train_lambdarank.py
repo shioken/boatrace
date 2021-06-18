@@ -45,14 +45,10 @@ for placeid, number in zip(df["placeid"], df["racenumber"]):
 df = df.drop(["place", "placeid", "racenumber", "area", "name", "age", "motor_no", "boat_no"], axis=1)
 
 ranks = ["A1", "A2", "B1", "B2"]
-for rank in ranks:
-    a = df["rank"].map(lambda x: 1 if x == rank else 0)
-    a.name = rank
-    df = pd.concat([df, a], axis=1)
+a = df["rank"].map(lambda x: ranks.index(x))
 df = df.drop(["rank"], axis=1)
-
-# columns = list(df.columns)
-# columns.remove("order")
+a.name = "rank"
+df = pd.concat([df, a], axis=1)
 
 X = df.drop(["result"], axis=1)
 y = result.astype(int)
@@ -71,10 +67,11 @@ queries_test = queries[train_race:]
 
 print(type(X), type(y))
 
+categorical_feature = ["number", "rank"]
 lgtrain = lgb.Dataset(races_train_train, races_target_train,
-                      group=queries_train, categorical_feature=[0, 1])
+                      group=queries_train, categorical_feature=categorical_feature)  # number, rank
 lgvalid = lgb.Dataset(races_train_valid, races_target_train_valid,
-                      group=queries_test, reference=lgtrain, categorical_feature=[0, 1])
+                      group=queries_test, reference=lgtrain, categorical_feature=categorical_feature)    # number, rank
 
 lgbm_params = {
     'task': 'train',
@@ -91,7 +88,7 @@ lgbm_params = {
 lgb_clf = lgb.train(
     lgbm_params,
     lgtrain,
-    categorical_feature=[0],
+    categorical_feature=categorical_feature,
     num_boost_round=250,
     valid_sets=[lgtrain, lgvalid],
     valid_names=['train', 'valid'],
