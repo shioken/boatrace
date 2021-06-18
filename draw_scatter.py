@@ -37,6 +37,8 @@ def draw_scatter(date, type):
         pjson = json.load(pf)
         rjson = json.load(rf)
 
+        out_deviations = []
+        out_inquires = []
         deviations = []
         inquires = []
         for place in pjson['places']:
@@ -50,8 +52,17 @@ def draw_scatter(date, type):
                     deviations.append(deviation)
                     inquires.append(odds)
 
-        fig = plt.figure()
+                    for i, racer in enumerate(race['racers']):
+                        if i != winner - 1:
+                            out_deviations.append(racer['deviation'])
+                            out_inquires.append(odds)
+
+        # fig = plt.figure()
+        plt.title(type)
+        plt.xlabel("deviation")
+        plt.ylabel("odds")
         plt.scatter(deviations, inquires)
+        plt.scatter(out_deviations, out_inquires, c='pink', alpha=0.5)
         plt.show()
                     
 

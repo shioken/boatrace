@@ -55,7 +55,14 @@ def inquire(target, type):
         win_inquire = 0
 
         for place in vjson:
+            print("------------------------------------------------------------")
             print(place["name"])
+
+            tierce_place_bet = 0
+            tierce_place_inquire = 0
+            win_place_bet = 0
+            win_place_inquire = 0
+            
             for race in place["races"]:
                 result = search_result(rjson, place["name"], race["number"])
                 if result is None:
@@ -76,6 +83,7 @@ def inquire(target, type):
                         trio_bet = sorted(bet)
 
                         total_bet += 100
+                        tierce_place_bet += 100
 
                         if no == 0:
                             total_bet_race += 1             # Betしたレース
@@ -87,6 +95,7 @@ def inquire(target, type):
 
                             tierce_count += 1
                             tierce_inquire += result['tierce']
+                            tierce_place_inquire += result['tierce']
 
                             trio_count += 1
                             trio_inquire += result['trio']
@@ -116,16 +125,26 @@ def inquire(target, type):
                         vline += " "
 
                     if 'votewin' in race:
-                        total_bet_win_race += 1
-                        vline += f"{race['votewin']}"
-                        if race['votewin'] == result['1st']:
-                            vline += "*"
-                            win_count += 1
-                            win_inquire += result['win']
+                        for vote_win in race['votewin']:
+                            total_bet_win_race += 1
+                            win_place_bet += 100
+                            vline += f"{vote_win}"
+                            if vote_win == result['1st']:
+                                vline += "*"
+                                win_count += 1
+                                win_inquire += result['win']
+                                win_place_inquire += result['win']
+                            else:
+                                vline += " "
 
                     print(vline)
                 else:
                     print(f"{race['number']}R レース不成立")
+            print("")
+            print(f"{place['name']}")
+            print(f"3連単: 購入{tierce_place_bet:8,} 払戻 {tierce_place_inquire:>8,} ({tierce_place_inquire - tierce_place_bet:> 8,})")
+            print(f"単勝 : 購入{win_place_bet:8,} 払戻 {win_place_inquire:>8,} ({win_place_inquire - win_place_bet:> 8,})")
+            print("")
 
 
         print("")

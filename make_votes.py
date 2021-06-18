@@ -39,6 +39,7 @@ def make_vote(pname, type):
                 # print(place["name"])
                 # print("------------------------------")
                 votes = []
+                votes_win = []
                 for race in place["races"]:
                     # print(race["number"], race["name"])
                     racers = race["racers"]
@@ -47,16 +48,14 @@ def make_vote(pname, type):
                     std = np.std(scores)
                     # print(std)
                     vote = []
-                    if std > 0.0:
-                        for i, racer in enumerate(sorted_racers):
-                            score = racer["score"]
-                            vote.append(racer["course"])
-                            # print(racer["course"], racer["name"], f"{score:>8.6f}")
-                        # print("")
-                        votes.append(vote)
-                    else:
-                        # print("skip this race")
-                        votes.append(vote)
+                    vote_win = []
+                    for i, racer in enumerate(sorted_racers):
+                        score = racer["score"]
+                        vote.append(racer["course"])
+                        if racer['deviation'] > 60:
+                            vote_win.append(racer['course'])
+                    votes.append(vote)
+                    votes_win.append(vote_win)
 
                 jp = {}
                 jp["name"] = place["name"]
@@ -74,7 +73,7 @@ def make_vote(pname, type):
                         jr["votes"].append(f"{votes[i][0]}-{votes[i][1]}-{votes[i][4]}")
                         jr["votes"].append(f"{votes[i][0]}-{votes[i][2]}-{votes[i][3]}")
 
-                        jr["votewin"] = votes[i][0]
+                        jr["votewin"] = votes_win[i]
 
                     jrs.append(jr)
                     
