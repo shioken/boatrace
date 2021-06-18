@@ -61,8 +61,8 @@ def draw_scatter(date, type):
         plt.title(type)
         plt.xlabel("deviation")
         plt.ylabel("odds")
-        plt.scatter(deviations, inquires)
-        plt.scatter(out_deviations, out_inquires, c='pink', alpha=0.5)
+        plt.scatter(out_deviations, out_inquires, c='pink', alpha=0.5, marker=".")
+        plt.scatter(deviations, inquires, marker=".", alpha=1)
         plt.show()
                     
 

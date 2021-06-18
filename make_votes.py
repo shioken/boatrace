@@ -52,7 +52,7 @@ def make_vote(pname, type):
                     for i, racer in enumerate(sorted_racers):
                         score = racer["score"]
                         vote.append(racer["course"])
-                        if racer['deviation'] > 60:
+                        if racer['deviation'] > 55:
                             vote_win.append(racer['course'])
                     votes.append(vote)
                     votes_win.append(vote_win)
