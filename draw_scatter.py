@@ -47,15 +47,16 @@ def draw_scatter(date, type):
                 if raceresult and 'result' in raceresult:
                     result = raceresult['result']
                     winner = result['1st']
-                    odds = result['win']
-                    deviation = race['racers'][winner - 1]['deviation']
-                    deviations.append(deviation)
-                    inquires.append(odds)
+                    if 'win' in result:
+                        odds = result['win']
+                        deviation = race['racers'][winner - 1]['deviation']
+                        deviations.append(deviation)
+                        inquires.append(odds)
 
-                    for i, racer in enumerate(race['racers']):
-                        if i != winner - 1:
-                            out_deviations.append(racer['deviation'])
-                            out_inquires.append(odds)
+                        for i, racer in enumerate(race['racers']):
+                            if i != winner - 1:
+                                out_deviations.append(racer['deviation'])
+                                out_inquires.append(odds)
 
         # fig = plt.figure()
         plt.title(type)

@@ -185,7 +185,8 @@ def parseWin(line, place, racenumber, results):
 
 
 def parseResultFile(filename):
-    # print(filename)
+    if not os.path.exists(filename):
+        return
 
     date = filename[filename.rfind('/') + 1: filename.find('.')]
 
@@ -282,22 +283,17 @@ def parseResultFiles(files):
 
 
 def mergeRaceAndResult(races, results):
-    emptyraces = []
-    for race in races:
-        # find result
-        for result in results:
-            if result["place"] == race["place"] and race["racenumber"] == result["racenumber"]:
-                race["result"] = result
-                break
-        
-        if not "result" in race:
-            # print("not result", race["place"], race["racenumber"])
-            emptyraces.append(race)
-            # return False
-
-    # 結果のないレースも保存する    
-    # for race in emptyraces:
-        # races.remove(race)
+    if races and results:
+        emptyraces = []
+        for race in races:
+            # find result
+            for result in results:
+                if result["place"] == race["place"] and race["racenumber"] == result["racenumber"]:
+                    race["result"] = result
+                    break
+            
+            if not "result" in race:
+                emptyraces.append(race)
 
     return True
 
