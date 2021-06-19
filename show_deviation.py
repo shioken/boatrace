@@ -29,7 +29,8 @@ def show_deviation(date, type, tp = None, tr = -1):
                         std = np.std(scores)
                         avg = np.average(scores)
 
-                        print(f"std: {std:2.8f} avg: {avg:2.8f}")
+                        print(f"   std: {std:2.8f} avg: {avg:2.8f}")
+                        print("")
                         for i, racer in enumerate(race['racers']):
                             print(f" {racer['course']} {racer['name']} {racer['score']: 2.8f} {(scores[i] - avg) / std * 10 + 50: 2.8f}")
                     

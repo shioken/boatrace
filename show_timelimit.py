@@ -21,7 +21,9 @@ def show_timelimit(date, limit=10):
         filterd_race = filter(lambda x:x['timelimit'] > now, sorted_race)
         for i, race in enumerate(filterd_race):
             place = (race['place'] + "　　　")[:3]
+            print("")
             print(f"{race['timelimit']} {place} {race['racenumber']:>2}R")
+            print("")
             show_deviation.show_deviation(date, 'lm', race['place'], race['racenumber'])
             if i + 1 == limit:
                 break
