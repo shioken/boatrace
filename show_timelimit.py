@@ -3,8 +3,9 @@ import os
 import sys
 import utils
 import json
+from datetime import datetime as dt
 
-def show_timelimit(date):
+def show_timelimit(date, limit=10):
     racefile = f'json/m{date}.json'
     if not os.path.exists(racefile):
         print(f"{racefile} is not exists.")
@@ -13,20 +14,33 @@ def show_timelimit(date):
     with open(racefile, 'r', encoding='utf-8') as rf:
         rjson = json.load(rf)
 
+        now = dt.now().strftime('%H:%M')
+
         sorted_race = sorted(rjson, key=lambda x: x['timelimit'])
-        for race in sorted_race:
+        filterd_race = filter(lambda x:x['timelimit'] > now, sorted_race)
+        for i, race in enumerate(filterd_race):
             place = (race['place'] + "　　　")[:3]
             print(f"{race['timelimit']} {place} {race['racenumber']:>2}R")
+            if i + 1 == limit:
+                break
+
+
 
 if __name__ == '__main__':
     date = ""
-    if len(sys.argv) == 1:
+    limit = 10
+    if len(sys.argv) < 3:
         date = utils.getStringToday()
-    elif len(sys.argv) > 1:
-        date = sys.argv[1]
+
+    if len(sys.argv) == 2:
+        limit = int(sys.argv[1])
+    
+    if len(sys.argv) == 3:
+        date = sys.argv[2]
         if date == 'today':
             date = utils.getStringToday()
         elif date == 'yesterday':
             date = utils.getStringYesterday()
+
     
-    show_timelimit(date)
+    show_timelimit(date, limit)
