@@ -4,6 +4,7 @@ import sys
 import utils
 import json
 from datetime import datetime as dt
+import show_deviation
 
 def show_timelimit(date, limit=10):
     racefile = f'json/m{date}.json'
@@ -21,6 +22,7 @@ def show_timelimit(date, limit=10):
         for i, race in enumerate(filterd_race):
             place = (race['place'] + "　　　")[:3]
             print(f"{race['timelimit']} {place} {race['racenumber']:>2}R")
+            show_deviation.show_deviation(date, 'lm', race['place'], race['racenumber'])
             if i + 1 == limit:
                 break
 
