@@ -108,11 +108,13 @@ def parseRacelistFile(filename):
                             racenumber = int(raceinfo[0].translate(raceinfo[0].maketrans(
                                 {chr(0xFF01 + i): chr(0x21 + i) for i in range(94)})).replace('R', ''))
                             # print(racenumber)
+                            racetime = raceinfo[-1].translate(raceinfo[-1].maketrans({chr(0xFF01 + i): chr(0x21 + i) for i in range(94)})).replace('R', '')
 
                             race = {}
                             race["place"] = place
                             race["placeid"] = places[place]
                             race["racenumber"] = racenumber
+                            race["timelimit"] = racetime.replace('電話投票締切予定', '')
                         else:
                             # 次の行から選手が出てくる
                             lb = 0

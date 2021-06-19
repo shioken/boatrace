@@ -24,7 +24,7 @@ def rankmap(rank):
     return [0.0, 0.0, 0.0, 0.0]
 
 def trimLine(line):
-    return re.sub('[ ]+', ' ', re.sub(r"[\u3000]", "", line)).split(' ')
+    return re.sub('[ ]+', ' ', re.sub(r"[\u3000]", "", line.strip())).split(' ')
 
 def getOffsetToday(delta):
     target = datetime.datetime.today() + datetime.timedelta(days=delta)
