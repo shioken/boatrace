@@ -97,6 +97,8 @@ if __name__ == '__main__':
             date = utils.getStringToday()
         elif date == 'yesterday':
             date = utils.getStringYesterday()
+        elif date == 'tommorow':
+            date = utils.getStringTommorow()
 
     if len(sys.argv) == 3:
         make_vote(date, sys.argv[2])

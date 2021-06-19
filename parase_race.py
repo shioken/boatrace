@@ -180,8 +180,8 @@ def parseWin(line, place, racenumber, results):
     # print(place, racenumber, tr)
     result = list(filter(lambda x: x['place'] == place and x['racenumber'] == racenumber, results))
     if len(result) > 0:
-        if len(tr) >3:
-            result[0]["win"] = int(tr[3])
+        if len(tr) > 2:
+            result[0]["win"] = int(tr[2])
         else:
             result[0]["win"] = 100  # k160521 下関 3Rに単勝の払戻金が無い
 
@@ -335,6 +335,8 @@ if __name__ == '__main__':
             date = utils.getStringToday()
         elif sys.argv[1] == 'yesterday':
             date = utils.getStringYesterday()
+        elif sys.argv[1] == 'tommorow':
+            date = utils.getStringTommorow()
 
         parseFile(date)
     else:
