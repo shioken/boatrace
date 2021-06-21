@@ -164,7 +164,7 @@ def inquire(target, type):
             print(f"単勝   :{win_count / total_bet_win_race * 100:8.2f}%")
             print(f"\n回収率")
             print(f"3連単x4:{tierce_inquire / total_bet * 100:8.2f}%")
-            print(f"3連複x4:{trio_inquire / (total_bet_race * 4):8.2f}%")
+            print(f"3連複x4:{trio_inquire / total_bet * 100:8.2f}%")
             print(f"3連単x1:{tierce_one_inquire / (total_bet_race * 100) * 100 :8.2f}%")
             print(f"3連複x1:{trio_one_inquire / (total_bet_race * 100) * 100 :8.2f}%")
             print(f"単勝   :{win_inquire / total_bet_win_race:>8.2f}%")

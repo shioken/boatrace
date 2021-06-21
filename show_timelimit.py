@@ -15,14 +15,17 @@ def show_timelimit(date, limit=10):
     with open(racefile, 'r', encoding='utf-8') as rf:
         rjson = json.load(rf)
 
-        now = dt.now().strftime('%H:%M')
+        now = dt.now()
+        fnow = dt.now().strftime('%H:%M')
 
         sorted_race = sorted(rjson, key=lambda x: x['timelimit'])
-        filterd_race = filter(lambda x:x['timelimit'] > now, sorted_race)
+        filterd_race = filter(lambda x:x['timelimit'] > fnow, sorted_race)
         for i, race in enumerate(filterd_race):
+            rdt = dt(year=now.year, month=now.month, day=now.day, hour=int(race['timelimit'][:2]), minute=int(race['timelimit'][3:]))
+            diff = rdt - now
             place = (race['place'] + "　　　")[:3]
             print("")
-            print(f"{race['timelimit']} {place} {race['racenumber']:>2}R")
+            print(f"{place} {race['racenumber']:>2}R {race['timelimit']} あと{diff.total_seconds() // 60:2.0f} 分")
             print("")
             show_deviation.show_deviation(date, 'lm', race['place'], race['racenumber'])
             if i + 1 == limit:
