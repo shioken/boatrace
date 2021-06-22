@@ -43,7 +43,7 @@ for placeid, number in zip(df["placeid"], df["racenumber"]):
     else:
         queries[index] += 1
 
-df = df.drop(["place", "placeid", "racenumber", "area", "name", "age", "motor_no", "boat_no"], axis=1)
+df = df.drop(["place", "racenumber", "area", "name", "age", "motor_no", "boat_no"], axis=1)
 
 ranks = ["A1", "A2", "B1", "B2"]
 a = df["rank"].map(lambda x: ranks.index(x))

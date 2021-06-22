@@ -96,7 +96,7 @@ def makeX(racer, place, prefix):
              win_cur, sec_cur, motor_ratio, boat_ratio]
         X += rank_val
     else:
-        X = [float(number), float(weight), win_all,
+        X = [int(placeid), int(number), float(weight), win_all,
              sec_all, win_cur, sec_cur, motor_ratio, boat_ratio]
         season_result = re.sub(r"[ FLSK]", "0", season_result)
         for i in range(6):
@@ -163,7 +163,7 @@ if __name__ == '__main__':
     date = ""
     if len(sys.argv) > 1:
         date = sys.argv[1]
-        if date == 'today':
+        if date == 'today' or date == 't':
             date = utils.getStringToday()
         elif date == 'yesterday':
             date = utils.getStringYesterday()
