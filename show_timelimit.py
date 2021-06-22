@@ -27,6 +27,9 @@ def show_timelimit(date, limit=10):
             print("")
             print(f"{place} {race['racenumber']:>2}R {race['timelimit']} あと{diff.total_seconds() // 60:2.0f} 分")
             print("")
+            print("nn")
+            show_deviation.show_deviation(date, 'nn', race['place'], race['racenumber'])
+            print("lm")
             show_deviation.show_deviation(date, 'lm', race['place'], race['racenumber'])
             if i + 1 == limit:
                 break

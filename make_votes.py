@@ -106,11 +106,11 @@ if __name__ == '__main__':
             date = utils.getStringYesterday()
         elif date == 'tommorow':
             date = utils.getStringTommorow()
+    else:
+        date = utils.getStringToday()
 
     if len(sys.argv) == 3:
         make_vote(date, sys.argv[2])
-    elif len(sys.argv) == 2:
+    else:
         make_vote(date, 'nn')
         make_vote(date, 'lm')
-    else:
-        print("make_votes.py date type(nn/lm)")

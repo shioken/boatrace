@@ -173,7 +173,7 @@ def parseResult(line):
     
 def parserOrder(line, order):
     tr = utils.trimLine(line)
-    return {f'c{tr[2]}': tr[1]}
+    return {f'b{tr[1]}': tr[0]}
 
 def parseWin(line, place, racenumber, results):
     tr = utils.trimLine(line)
@@ -331,7 +331,7 @@ def parseFile(date):
 if __name__ == '__main__':
     if len(sys.argv) == 2:
         date = sys.argv[1]
-        if sys.argv[1] == 'today':
+        if sys.argv[1] == 'today' or sys.argv[1] == 't':
             date = utils.getStringToday()
         elif sys.argv[1] == 'yesterday':
             date = utils.getStringYesterday()

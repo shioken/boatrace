@@ -129,7 +129,7 @@ def scrap_all():
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
-        if sys.argv[1] == 'today':
+        if sys.argv[1] == 'today' or sys.argv[1] == 't':
             scrap_today()
         elif sys.argv[1] == 'yesterday':
             scrap_yesterday()

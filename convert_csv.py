@@ -7,7 +7,6 @@ import sys
 
 def convertFile(file, force=False):
     csvfilename = f'csv/{os.path.splitext(os.path.basename(file))[0]}.csv'
-    print(file, csvfilename)
 
     if not force and os.path.exists(csvfilename):
         print(f"file {csvfilename} is exists")
@@ -25,20 +24,15 @@ def convertFile(file, force=False):
 
         rows = []
         for race in data:
-            result = race["result"]
+            if not 'result' in race:
+                break
 
+            result = race["result"]
             racers = race["racers"]
             for i, racer in enumerate(racers):
                 row = []
 
-                # score = (0, 0, 0)
-                # if (i + 1) in results:
-                #     r = results.index(i + 1)
-                #     score = scores[r]
-
-                # row += score
-                # print(result)
-                key = f'c{str(i + 1)}'
+                key = f'b{i + 1}'
                 if key in result:
                     row.append(result[key])
                 else:
@@ -74,19 +68,22 @@ def convertFile(file, force=False):
                 # else:
                 #     print("skip race(中止)")
 
-        with open(csvfilename, 'wt', encoding='utf-8') as w:
-            writer = csv.writer(w)
+        if len(rows) > 0:
+            with open(csvfilename, 'wt', encoding='utf-8') as w:
+                writer = csv.writer(w)
 
-            header = []
-            header += ["result"]
-            header += ["place", "placeid", "racenumber", ]
-            header += ["number", "name", "age", "area", "weight", "rank", "win_all", "sec_all", "win_cur", "sec_cur", "motor_no", "motor_ratio", "boat_no", "boat_ratio"]
-            header += ["r1", "r2", "r3", "r4", "r5", "r6"]
-            # for i in range(1, 7):
-            #     header += [f"number{i}", f"name{i}", f"age{i}", f"area{i}", f"weight{i}", f"rank{i}", f"win_all{i}", f"sec_all{i}", f"win_cur{i}", f"sec_cur{i}"]
+                header = []
+                header += ["result"]
+                header += ["place", "placeid", "racenumber", ]
+                header += ["number", "name", "age", "area", "weight", "rank", "win_all", "sec_all", "win_cur", "sec_cur", "motor_no", "motor_ratio", "boat_no", "boat_ratio"]
+                header += ["r1", "r2", "r3", "r4", "r5", "r6"]
+                # for i in range(1, 7):
+                #     header += [f"number{i}", f"name{i}", f"age{i}", f"area{i}", f"weight{i}", f"rank{i}", f"win_all{i}", f"sec_all{i}", f"win_cur{i}", f"sec_cur{i}"]
 
-            writer.writerow(header)            
-            writer.writerows(rows)
+                writer.writerow(header)            
+                writer.writerows(rows)
+
+                print(f"out: {csvfilename}")
 
 
 
