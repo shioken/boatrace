@@ -79,7 +79,7 @@ lgbm_params = {
     'boosting_type': 'gbdt',
     'objective': 'lambdarank',
     'metric': 'ndcg',
-    'ndcg_eval_at': [1, 2, 3],
+    'ndcg_eval_at': [1, 2, 3, 4, 5, 6],
     'learning_rate': 0.01,
     'min_data': 1,
     'min_data_in_bin': 1,
