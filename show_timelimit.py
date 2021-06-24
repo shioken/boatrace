@@ -5,6 +5,7 @@ import utils
 import json
 from datetime import datetime as dt
 import show_deviation
+import scrap_odds_win
 
 def show_timelimit(date, limit=10):
     racefile = f'json/m{date}.json'
@@ -31,6 +32,8 @@ def show_timelimit(date, limit=10):
             show_deviation.show_deviation(date, 'nn', race['place'], race['racenumber'])
             print("lm")
             show_deviation.show_deviation(date, 'lm', race['place'], race['racenumber'])
+            print("\nodds")
+            scrap_odds_win.scrap_odds(date, race['place'], race['racenumber'], False)
             if i + 1 == limit:
                 break
 

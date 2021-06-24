@@ -8,7 +8,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def scrap_odds(date, place, race):
+def scrap_odds(date, place, race, writeFile=True):
     places = {'桐生': 1, '戸田': 2, '江戸川': 3, '平和島': 4, '多摩川': 5, '浜名湖': 6, '蒲郡': 7,
               '常滑': 8, '津': 9, '三国': 10, 'びわこ': 11, '琵琶湖': 11, '住之江': 12, '尼崎': 13, '鳴門': 14, '丸亀': 15, '児島': 16, '宮島': 17, '徳山': 18, '下関': 19, '若松': 20, '芦屋': 21, '福岡': 22, '唐津': 23, '大村': 24, }
 
@@ -16,10 +16,10 @@ def scrap_odds(date, place, race):
         date = f'20{date}'
 
     placeid = int(place) if place.isdigit() else places[place]
-    print(date, f"{placeid:02}", race)
+    # print(date, f"{placeid:02}", race)
 
     target_url = f'https://www.boatrace.jp/owpc/pc/race/oddstf?rno={race}&jcd={placeid:02}&hd={date}'
-    print(target_url)
+    # print(target_url)
 
     try:
         r = requests.get(target_url)
@@ -47,12 +47,16 @@ def scrap_odds(date, place, race):
             else:
                 odds[c]["double_win"] = td.get_text()
 
-    jsonfilename = f"odds/w{date[2:]}{placeid:02}{int(race):02}.json"
-    with open(jsonfilename, 'w', encoding='utf-8') as jf:
-        json.dump(odds, jf, ensure_ascii=False, indent=4)
-        print(f'output: {jsonfilename}')
+    if writeFile:
+        jsonfilename = f"odds/w{date[2:]}{placeid:02}{int(race):02}.json"
+        with open(jsonfilename, 'w', encoding='utf-8') as jf:
+            json.dump(odds, jf, ensure_ascii=False, indent=4)
+            print(f'output: {jsonfilename}')
 
         return jsonfilename
+    else:
+        for i, racer in enumerate(odds):
+            print(f"{i + 1} {racer['win']:>4.1f} {racer['double_win']}")
 
 if __name__ == '__main__':
     if len(sys.argv) == 4:
