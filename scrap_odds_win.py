@@ -30,6 +30,10 @@ def scrap_odds(date, place, race, writeFile=True):
 
     soup = BeautifulSoup(r.text, "html.parser")
 
+    # 更新時刻
+    refresh = soup.select('.tab4_refreshText')
+    print(refresh[0].get_text())
+
     # table = soup.select('tbody.is-p3-0')
     tds = soup.select('td.oddsPoint')
 

@@ -7,6 +7,7 @@ from datetime import datetime as dt
 import show_deviation
 import scrap_odds_win
 import numpy as np
+import utils
 
 def show_timelimit(date, limit=10):
     racefile = f'json/m{date}.json'
@@ -26,8 +27,11 @@ def show_timelimit(date, limit=10):
             rdt = dt(year=now.year, month=now.month, day=now.day, hour=int(race['timelimit'][:2]), minute=int(race['timelimit'][3:]))
             diff = rdt - now
             place = (race['place'] + "　　　")[:3]
+            print(f"http://livebb.jlc.ne.jp/bb_top/new_bb/index.php?tpl={utils.placeid(race['place'])}")
             print("")
-            print(f"{place} {race['racenumber']:>2}R {race['timelimit']} あと{diff.total_seconds() // 60:2.0f} 分")
+            last_time_min = diff.total_seconds() // 60
+            last_time_sec = diff.total_seconds() - last_time_min * 60
+            print(f"{place} {race['racenumber']:>2}R {race['timelimit']} あと{last_time_min:>2.0f}分{last_time_sec:>2.0f}秒")
             print("")
             print("nn")
             nn = show_deviation.show_deviation(date, 'nn', race['place'], race['racenumber'])
@@ -37,12 +41,13 @@ def show_timelimit(date, limit=10):
             odds = scrap_odds_win.scrap_odds(date, race['place'], race['racenumber'], False)
 
             if not nn is None:
+                print("\n推定単勝オッズ")
                 sum = np.sum(nn)
                 for c, (v, o) in enumerate(zip(nn, odds)):
                     c_odds = sum / v
                     d = float(o['win'])
                     mark = "*" if c_odds < d else ' '
-                    print(f"{c + 1} {sum / v:>6.2f} {mark}")
+                    print(f"{c + 1} {c_odds:>6.2f} {1 / c_odds * 100: >5.2f}% {mark}")
 
             if i + 1 == limit:
                 break

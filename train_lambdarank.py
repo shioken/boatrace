@@ -43,7 +43,7 @@ for placeid, number in zip(df["placeid"], df["racenumber"]):
     else:
         queries[index] += 1
 
-df = df.drop(["place", "racenumber", "area", "name", "age", "motor_no", "boat_no"], axis=1)
+df = df.drop(["place", "area", "name", "age", "motor_no", "boat_no"], axis=1)
 
 ranks = ["A1", "A2", "B1", "B2"]
 a = df["rank"].map(lambda x: ranks.index(x))
@@ -68,7 +68,7 @@ queries_test = queries[train_race:]
 
 print(type(X), type(y))
 
-categorical_feature = ["number", "rank"]
+categorical_feature = ["placeid", "number", "racenumber", "rank"]
 lgtrain = lgb.Dataset(races_train_train, races_target_train,
                       group=queries_train, categorical_feature=categorical_feature)  # number, rank
 lgvalid = lgb.Dataset(races_train_valid, races_target_train_valid,

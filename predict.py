@@ -66,7 +66,7 @@ def prediction_lm(racers, race):
         racer["score"] = float(pr)
         racer["deviation"] = float((pr - mean) / std * 10 + 50)
 
-def makeX(racer, place, prefix):
+def makeX(racer, place, racenumber, prefix):
     (number, name, age, area, weight, rank, win_all, sec_all, win_cur, sec_cur, motor_no, motor_ratio, boat_no, boat_ratio, season_result) = (
         racer["number"],
         racer["name"],
@@ -96,7 +96,7 @@ def makeX(racer, place, prefix):
              win_cur, sec_cur, motor_ratio, boat_ratio]
         X += rank_val
     else:
-        X = [int(placeid), int(number), float(weight), win_all,
+        X = [int(placeid), int(number), int(racenumber), float(weight), win_all,
              sec_all, win_cur, sec_cur, motor_ratio, boat_ratio]
         season_result = re.sub(r"[ FLSK]", "0", season_result)
         for i in range(6):
@@ -141,7 +141,7 @@ def prediction(date, type):
 
             racers_X = []
             for i, racer in enumerate(race["racers"]):
-                racers_X.append(makeX(racer, placename, prefix))
+                racers_X.append(makeX(racer, placename, race["racenumber"], prefix))
                 jracer = {}
                 jracer["name"] = racer["name"]
                 jracer["course"] = i + 1
