@@ -176,7 +176,7 @@ if __name__ == '__main__':
     date = ""
     if len(sys.argv) > 1:
         date = sys.argv[1]
-        if date == 'today':
+        if date == 'today' or date == 't':
             date = utils.getStringToday()
         elif date == 'yesterday':
             date = utils.getStringYesterday()
