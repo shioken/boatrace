@@ -6,6 +6,7 @@ import json
 from datetime import datetime as dt
 import show_deviation
 import scrap_odds_win
+import numpy as np
 
 def show_timelimit(date, limit=10):
     racefile = f'json/m{date}.json'
@@ -29,11 +30,20 @@ def show_timelimit(date, limit=10):
             print(f"{place} {race['racenumber']:>2}R {race['timelimit']} あと{diff.total_seconds() // 60:2.0f} 分")
             print("")
             print("nn")
-            show_deviation.show_deviation(date, 'nn', race['place'], race['racenumber'])
+            nn = show_deviation.show_deviation(date, 'nn', race['place'], race['racenumber'])
             print("lm")
-            show_deviation.show_deviation(date, 'lm', race['place'], race['racenumber'])
+            lm = show_deviation.show_deviation(date, 'lm', race['place'], race['racenumber'])
             print("\nodds")
-            scrap_odds_win.scrap_odds(date, race['place'], race['racenumber'], False)
+            odds = scrap_odds_win.scrap_odds(date, race['place'], race['racenumber'], False)
+
+            if not nn is None:
+                sum = np.sum(nn)
+                for c, (v, o) in enumerate(zip(nn, odds)):
+                    c_odds = sum / v
+                    d = float(o['win'])
+                    mark = "*" if c_odds < d else ' '
+                    print(f"{c + 1} {sum / v:>6.2f} {mark}")
+
             if i + 1 == limit:
                 break
 
@@ -41,7 +51,7 @@ def show_timelimit(date, limit=10):
 
 if __name__ == '__main__':
     date = ""
-    limit = 10
+    limit = 5
     if len(sys.argv) < 3:
         date = utils.getStringToday()
 

@@ -57,6 +57,8 @@ def scrap_odds(date, place, race, writeFile=True):
     else:
         for i, racer in enumerate(odds):
             print(f"{i + 1} {racer['win']:>4.1f} {racer['double_win']}")
+    
+    return odds
 
 if __name__ == '__main__':
     if len(sys.argv) == 4:

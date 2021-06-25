@@ -33,6 +33,10 @@ def show_deviation(date, type, tp = None, tr = -1):
                         print("")
                         for i, racer in enumerate(race['racers']):
                             print(f" {racer['course']} {racer['name']} {racer['score']: 2.8f} {(scores[i] - avg) / std * 10 + 50: 2.8f}")
+                        
+                        if tr > -1:
+                            return scores
+        
                     
         
     
