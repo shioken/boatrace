@@ -21,10 +21,10 @@ def show_deviation(date, type, tp = None, tr = -1):
         pjson = json.load(pf)
         for place in pjson['places']:
             if not tp or tp == place['name']:
-                print(place['name'])
+                # print(place['name'])
                 for race in place['races']:
                     if tr < 0 or race['number'] == tr:
-                        print(f"{race['number']:2}R")
+                        # print(f"{race['number']:2}R")
                         scores = np.array(list(map(lambda x: x['score'], race['racers'])))
                         std = np.std(scores)
                         avg = np.average(scores)

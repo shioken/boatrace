@@ -26,16 +26,20 @@ def show_timelimit(date, limit=10):
         for i, race in enumerate(filterd_race):
             rdt = dt(year=now.year, month=now.month, day=now.day, hour=int(race['timelimit'][:2]), minute=int(race['timelimit'][3:]))
             diff = rdt - now
-            place = (race['place'] + "　　　")[:3]
-            print(f"http://livebb.jlc.ne.jp/bb_top/new_bb/index.php?tpl={utils.placeid(race['place'])}")
-            print("")
+            place = race['place']
+            placeid = utils.placeid(place)
+            racenumber = race['racenumber']
+            formatted_place = (race['place'] + "　　　")[:3]
             last_time_min = diff.total_seconds() // 60
             last_time_sec = diff.total_seconds() - last_time_min * 60
-            print(f"{place} {race['racenumber']:>2}R {race['timelimit']} あと{last_time_min:>2.0f}分{last_time_sec:>2.0f}秒")
             print("")
-            print("nn")
+            print(f"{formatted_place} {race['racenumber']:>2}R {race['timelimit']} あと{last_time_min:>2.0f}分{last_time_sec:>2.0f}秒")
+            print("")
+            print(f"http://livebb.jlc.ne.jp/bb_top/new_bb/index.php?tpl={placeid}")
+            print(f"https://www.boatrace.jp/owpc/pc/race/oddstf?rno={racenumber:02}&jcd={placeid}&hd=20{date}")
+            print("\nnn\n")
             nn = show_deviation.show_deviation(date, 'nn', race['place'], race['racenumber'])
-            print("lm")
+            print("\nlm\n")
             lm = show_deviation.show_deviation(date, 'lm', race['place'], race['racenumber'])
             print("\nodds")
             odds = scrap_odds_win.scrap_odds(date, race['place'], race['racenumber'], False)
