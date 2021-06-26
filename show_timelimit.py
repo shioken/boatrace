@@ -47,11 +47,12 @@ def show_timelimit(date, limit=10):
             if not nn is None:
                 print("\n推定単勝オッズ")
                 sum = np.sum(nn)
-                for c, (v, o) in enumerate(zip(nn, odds)):
-                    c_odds = sum / v
-                    d = float(o['win'])
-                    mark = "*" if c_odds < d else ' '
-                    print(f"{c + 1} {c_odds:>6.2f} {1 / c_odds * 100: >5.2f}% {mark}")
+                if not odds is None:
+                    for c, (v, o) in enumerate(zip(nn, odds)):
+                        c_odds = sum / v
+                        d = float(o['win'])
+                        mark = "*" if c_odds < d else ' '
+                        print(f"{c + 1} {c_odds:>6.2f} {1 / c_odds * 100: >5.2f}% {mark}")
 
             if i + 1 == limit:
                 break

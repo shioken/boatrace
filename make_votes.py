@@ -102,7 +102,7 @@ if __name__ == '__main__':
         date = sys.argv[1]
         if date == 'today' or date == 't':
             date = utils.getStringToday()
-        elif date == 'yesterday':
+        elif date == 'yesterday' or date == 'y':
             date = utils.getStringYesterday()
         elif date == 'tommorow':
             date = utils.getStringTommorow()

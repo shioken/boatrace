@@ -331,11 +331,11 @@ def parseFile(date):
 if __name__ == '__main__':
     if len(sys.argv) == 2:
         date = sys.argv[1]
-        if sys.argv[1] == 'today' or sys.argv[1] == 't':
+        if date == 'today' or date == 't':
             date = utils.getStringToday()
-        elif sys.argv[1] == 'yesterday':
+        elif date == 'yesterday' or date == 'y':
             date = utils.getStringYesterday()
-        elif sys.argv[1] == 'tommorow':
+        elif date == 'tommorow':
             date = utils.getStringTommorow()
 
         parseFile(date)
