@@ -36,7 +36,7 @@ def show_timelimit(date, limit=10):
             print(f"{formatted_place} {race['racenumber']:>2}R {race['timelimit']} あと{last_time_min:>2.0f}分{last_time_sec:>2.0f}秒")
             print("")
             print(f"http://livebb.jlc.ne.jp/bb_top/new_bb/index.php?tpl={placeid}")
-            print(f"https://www.boatrace.jp/owpc/pc/race/oddstf?rno={racenumber:02}&jcd={placeid}&hd=20{date}")
+            print(f"https://www.boatrace.jp/owpc/pc/race/oddstf?rno={racenumber}&jcd={placeid:02}&hd=20{date}")
             print("\nnn\n")
             nn = show_deviation.show_deviation(date, 'nn', race['place'], race['racenumber'])
             print("\nlm\n")
