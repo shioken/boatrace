@@ -131,7 +131,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         if sys.argv[1] == 'today' or sys.argv[1] == 't':
             scrap_today()
-        elif sys.argv[1] == 'yesterday':
+        elif sys.argv[1] == 'yesterday' or sys.argv[1] == 'y':
             scrap_yesterday()
         elif sys.argv[1] == 'tommorow':
             scrap_tommorow()
