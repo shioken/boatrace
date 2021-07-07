@@ -61,8 +61,17 @@ def show_deviation(date, type, tp = None, tr = -1):
                         # クラスタリングした要素番号を取得
                         clusters = xmeans_instance.get_clusters()
 
-                        print(f"num of clusters: {len(clusters)}")
-                        for i, cluster in enumerate(clusters):
+                        def avg_scores(cs):
+                            sum = 0
+                            for x in cs:
+                                sum += df.iloc[x][0]
+                            return sum / len(cs)
+
+                        sorted_clusters = sorted(clusters, key=lambda x: avg_scores(x))
+                        sorted_clusters.reverse()
+
+                        print(f"num of clusters: {len(sorted_clusters)}")
+                        for i, cluster in enumerate(sorted_clusters):
                             print(f"cluster {i}")
                             for j in cluster:
                                 print(j + 1)
