@@ -5,6 +5,10 @@ import os
 import re
 import json
 import numpy as np
+import pandas as pd
+from sklearn import datasets, preprocessing
+from pyclustering.cluster.xmeans import xmeans
+from pyclustering.cluster.center_initializer import kmeans_plusplus_initializer
 
 def show_deviation(date, type, tp = None, tr = -1):
     if not re.match("nn|lm", type):
@@ -31,9 +35,38 @@ def show_deviation(date, type, tp = None, tr = -1):
 
                         print(f"   std: {std:2.8f} avg: {avg:2.8f}")
                         print("")
+
+                        df = pd.DataFrame()
+
                         for i, racer in enumerate(race['racers']):
                             print(f" {racer['course']} {racer['name']} {racer['score']: 2.8f} {(scores[i] - avg) / std * 10 + 50: 2.8f}")
-                        
+                            df = df.append([scores[i]])
+
+                        df = df.reset_index(drop=True)
+                        # print(df)
+
+                        X = df.copy()
+                        scaler = preprocessing.StandardScaler()
+                        scaler.fit(X)
+                        scaled_X = scaler.transform(X)
+
+                        # クラスタリングの初期条件
+                        amount_initial_centers = 2
+                        initial_centers = kmeans_plusplus_initializer(X, amount_initial_centers).initialize()
+
+                        # クラスタリングの実行
+                        xmeans_instance = xmeans(scaled_X, initial_centers=initial_centers, )
+                        xmeans_instance.process()
+
+                        # クラスタリングした要素番号を取得
+                        clusters = xmeans_instance.get_clusters()
+
+                        print(f"num of clusters: {len(clusters)}")
+                        for i, cluster in enumerate(clusters):
+                            print(f"cluster {i}")
+                            for j in cluster:
+                                print(j + 1)
+
                         if tr > -1:
                             return scores
         
