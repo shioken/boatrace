@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-import predict_lambdarank as pl
-import make_votes_lambdarank as mvl
-import inquire_lambdarank as inquire
+import predict as pl
+import make_votes as mvl
+import inquire as inquire
 import datetime
 import sys
 
@@ -26,10 +26,10 @@ def agreegate(target, days = 31):
     while dur < days:
         target = date.strftime("%y%m%d")
 
-        pl.openfile(target)
-        mvl.make_vote(target)
+        pl.prediction(target, 'lm')
+        mvl.make_vote(target, 'lm')
 
-        result = inquire.inquire(target)
+        result = inquire.inquire(target, 'lm')
         if result:
             (total_race, total_bet_race, total_bet, tierce_count, tierce_inquire, trio_count,
              trio_inquire, tierce_one_count, tierce_one_inquire, win_count, win_inquire) = result
