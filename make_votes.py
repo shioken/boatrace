@@ -104,7 +104,7 @@ if __name__ == '__main__':
             date = utils.getStringToday()
         elif date == 'yesterday' or date == 'y':
             date = utils.getStringYesterday()
-        elif date == 'tommorow':
+        elif date == 'tommorow' or date == '+1':
             date = utils.getStringTommorow()
     else:
         date = utils.getStringToday()
