@@ -36,23 +36,23 @@ def show_timelimit(date, limit=10):
             print(f"{formatted_place} {race['racenumber']:>2}R {race['timelimit']} あと{last_time_min:>2.0f}分{last_time_sec:>2.0f}秒")
             print("")
             print(f"http://livebb.jlc.ne.jp/bb_top/new_bb/index.php?tpl={placeid}")
-            print(f"https://www.boatrace.jp/owpc/pc/race/oddstf?rno={racenumber}&jcd={placeid:02}&hd=20{date}")
+            print(f"https://www.boatrace.jp/owpc/pc/race/odds3t?rno={racenumber}&jcd={placeid:02}&hd=20{date}")
             print("\nnn\n")
-            nn = show_deviation.show_deviation(date, 'nn', race['place'], race['racenumber'])
-            print("\nlm\n")
+            # nn = show_deviation.show_deviation(date, 'nn', race['place'], race['racenumber'])
+            # print("\nlm\n")
             lm = show_deviation.show_deviation(date, 'lm', race['place'], race['racenumber'])
-            print("\nodds")
-            odds = scrap_odds_win.scrap_odds(date, race['place'], race['racenumber'], False)
+            # print("\nodds")
+            # odds = scrap_odds_win.scrap_odds(date, race['place'], race['racenumber'], False)
 
-            if not nn is None:
-                print("\n推定単勝オッズ")
-                sum = np.sum(nn)
-                if not odds is None:
-                    for c, (v, o) in enumerate(zip(nn, odds)):
-                        c_odds = sum / v
-                        d = float(o['win'])
-                        mark = "*" if c_odds < d else ' '
-                        print(f"{c + 1} {c_odds:>6.2f} {1 / c_odds * 100: >5.2f}% {mark}")
+            # if not nn is None:
+            #     print("\n推定単勝オッズ")
+            #     sum = np.sum(nn)
+            #     if not odds is None:
+            #         for c, (v, o) in enumerate(zip(nn, odds)):
+            #             c_odds = sum / v
+            #             d = float(o['win'])
+            #             mark = "*" if c_odds < d else ' '
+            #             print(f"{c + 1} {c_odds:>6.2f} {1 / c_odds * 100: >5.2f}% {mark}")
 
             if i + 1 == limit:
                 break
