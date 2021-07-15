@@ -9,7 +9,7 @@ import scrap_odds_win
 import numpy as np
 import utils
 
-def show_timelimit(date, limit=10):
+def show_timelimit(date, limit=10, type="lm"):
     racefile = f'json/m{date}.json'
     if not os.path.exists(racefile):
         print(f"{racefile} is not exists.")
@@ -37,10 +37,13 @@ def show_timelimit(date, limit=10):
             print("")
             print(f"http://livebb.jlc.ne.jp/bb_top/new_bb/index.php?tpl={placeid}")
             print(f"https://www.boatrace.jp/owpc/pc/race/odds3t?rno={racenumber}&jcd={placeid:02}&hd=20{date}")
-            print("\nnn\n")
-            # nn = show_deviation.show_deviation(date, 'nn', race['place'], race['racenumber'])
-            # print("\nlm\n")
-            lm = show_deviation.show_deviation(date, 'lm', race['place'], race['racenumber'])
+            if type == 'nn':
+                print("\nnn\n")
+                nn = show_deviation.show_deviation(date, 'nn', race['place'], race['racenumber'])
+
+            if type == 'lm':
+                print("\nlm\n")
+                lm = show_deviation.show_deviation(date, 'lm', race['place'], race['racenumber'])
             # print("\nodds")
             # odds = scrap_odds_win.scrap_odds(date, race['place'], race['racenumber'], False)
 
@@ -60,20 +63,20 @@ def show_timelimit(date, limit=10):
 
 
 if __name__ == '__main__':
-    date = ""
     limit = 5
-    if len(sys.argv) < 3:
-        date = utils.getStringToday()
+    date = utils.getStringToday()
+    type = "lm"
 
     if len(sys.argv) == 2:
         limit = int(sys.argv[1])
     
     if len(sys.argv) == 3:
-        date = sys.argv[2]
-        if date == 'today':
-            date = utils.getStringToday()
-        elif date == 'yesterday':
-            date = utils.getStringYesterday()
+        type = sys.argv[2]
+        # date = sys.argv[2]
+        # if date == 'today':
+        #     date = utils.getStringToday()
+        # elif date == 'yesterday':
+        #     date = utils.getStringYesterday()
 
     
-    show_timelimit(date, limit)
+    show_timelimit(date, limit, type)

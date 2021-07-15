@@ -11,12 +11,12 @@ files_2021 = glob.glob('csv/m210[1-5]*.csv')
 files_2020 = glob.glob('csv/m20*.csv')
 files_2019 = glob.glob('csv/m19*.csv')
 files_2018 = glob.glob('csv/m18*.csv')
-files = files_2018 + files_2019 + files_2020 + files_2021
+files = sorted(files_2018 + files_2019 + files_2020 + files_2021, reverse=True)
+
 # files = sorted(glob.glob('csv/*.csv'), reverse=True)[4:]
 csvs = []
 
-# 新しいものから1年分件取得する
-# for i in range(1, 365 * 2 + 1):
+# 新しいものから2年分件取得する
 for i, file in enumerate(files):
     csv = pd.read_csv(file)
     csvs.append(csv)

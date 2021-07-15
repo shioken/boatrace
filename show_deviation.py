@@ -87,11 +87,11 @@ if __name__ == '__main__':
     date = ""
     if len(sys.argv) > 1:
         date = sys.argv[1]
-        if date == 'today':
+        if date == 'today' or date == 't':
             date = utils.getStringToday()
-        elif date == 'yesterday':
+        elif date == 'yesterday' or date == 'y':
             date = utils.getStringYesterday()
-        elif date == 'tommorow':
+        elif date == 'tommorow' or date == '+1':
             date = utils.getStringTommorow()
 
     if len(sys.argv) == 3:
