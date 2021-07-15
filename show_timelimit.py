@@ -67,7 +67,7 @@ if __name__ == '__main__':
     date = utils.getStringToday()
     type = "lm"
 
-    if len(sys.argv) == 2:
+    if len(sys.argv) > 1:
         limit = int(sys.argv[1])
     
     if len(sys.argv) == 3:
