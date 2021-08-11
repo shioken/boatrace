@@ -80,7 +80,7 @@ lgbm_params = {
     'objective': 'lambdarank',
     'metric': 'ndcg',
     'ndcg_eval_at': [1, 2, 3],
-    'learning_rate': 0.01,
+    'learning_rate': 0.005,
     'min_data': 1,
     'min_data_in_bin': 1,
     # 'device': 'gpu',
