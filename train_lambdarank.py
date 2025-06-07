@@ -56,12 +56,19 @@ y = result.astype(int)
 
 print(X.head(12))
 
+# データ分割を正しく実装
 racecount = len(queries)
-test_race = int(racecount * 2 / 10)
+test_race = int(racecount * 0.2)  # 20%をテスト用
 train_race = racecount - test_race
 
-races_train_train, races_train_valid, races_target_train, races_target_train_valid = train_test_split(
-    X, y, test_size=test_race * 6, shuffle=False)
+# レース単位でのデータ分割
+train_samples = sum(queries[:train_race])
+test_samples = sum(queries[train_race:])
+
+races_train_train = X[:train_samples]
+races_train_valid = X[train_samples:]
+races_target_train = y[:train_samples]
+races_target_train_valid = y[train_samples:]
 
 queries_train = queries[:train_race]
 queries_test = queries[train_race:]
@@ -80,21 +87,30 @@ lgbm_params = {
     'objective': 'lambdarank',
     'metric': 'ndcg',
     'ndcg_eval_at': [1, 2, 3],
-    'learning_rate': 0.005,
+    'learning_rate': 0.02,  # 0.005から0.02に増加
     'min_data': 1,
     'min_data_in_bin': 1,
+    'num_leaves': 31,
+    'max_depth': 6,
+    'feature_fraction': 0.8,
+    'bagging_fraction': 0.8,
+    'bagging_freq': 5,
+    'min_child_samples': 20,
+    'reg_alpha': 0.1,
+    'reg_lambda': 0.1,
     # 'device': 'gpu',
 }
 
 lgb_clf = lgb.train(
     lgbm_params,
     lgtrain,
-    categorical_feature=categorical_feature,
-    num_boost_round=250,
+    num_boost_round=1000,  # 250から1000に増加
     valid_sets=[lgtrain, lgvalid],
     valid_names=['train', 'valid'],
-    early_stopping_rounds=20,
-    verbose_eval=5
+    callbacks=[
+        lgb.early_stopping(50),  # 20から50に増加
+        lgb.log_evaluation(20)
+    ]
 )
 
 lgb_clf.save_model("model/lambdarank.txt")

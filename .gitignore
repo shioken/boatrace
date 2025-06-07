@@ -5,3 +5,4 @@ remove.sh
 csv.zip
 test*.py
 __pycache__
+.claude/
